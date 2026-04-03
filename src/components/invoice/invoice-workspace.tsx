@@ -14,6 +14,9 @@ import { isValidNip, normalizeNip } from "@/core/use-cases/validate-nip";
 import { invoiceFormSchema, type InvoiceFormValues } from "@/lib/schemas/invoice";
 import { cn } from "@/lib/utils";
 
+import { InvoiceFormItems } from "./invoice-form-items";
+import { InvoiceFormMetadata } from "./invoice-form-metadata";
+import { InvoiceFormParty } from "./invoice-form-party";
 import { InvoiceLivePreview } from "./invoice-live-preview";
 import { InvoicePdfDownloadButton } from "./invoice-pdf-download-button";
 
@@ -60,11 +63,6 @@ export function InvoiceWorkspace() {
     resolver: zodResolver(invoiceFormSchema),
     defaultValues: defaultInvoiceValues,
     mode: "onBlur",
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "items",
   });
 
   const watchedValues = useWatch({ control }) as InvoiceFormValues;
@@ -211,192 +209,19 @@ export function InvoiceWorkspace() {
           )}
           onSubmit={handleSubmit(onSubmit)}
         >
-          <section className="grid gap-4 md:grid-cols-2">
-            <FormField label="Numer faktury" htmlFor="number" error={errors.number?.message}>
-              <Input id="number" {...register("number")} />
-            </FormField>
+          <InvoiceFormMetadata register={register} errors={errors} />
 
-            <div className="space-y-2">
-              <label htmlFor="type" className="text-sm font-medium text-black/80 dark:text-white/80">
-                Typ faktury
-              </label>
-              <select
-                id="type"
-                className="h-11 w-full rounded-md border border-[#E5E5E5] bg-white px-3 text-sm dark:border-[#262626] dark:bg-black"
-                {...register("type")}
-              >
-                <option value="VAT">VAT</option>
-                <option value="Proforma">Proforma</option>
-                <option value="Correction">Korekta</option>
-              </select>
-            </div>
+          <InvoiceFormParty type="issuer" register={register} errors={errors} />
 
-            <FormField label="Data wystawienia" htmlFor="issueDate" error={errors.issueDate?.message}>
-              <Input id="issueDate" type="date" {...register("issueDate")} />
-            </FormField>
+          <InvoiceFormParty
+            type="client"
+            register={register}
+            errors={errors}
+            onGusFetch={fetchCompanyFromGus}
+            gusStatus={gusStatus}
+          />
 
-            <FormField label="Data sprzedaży" htmlFor="saleDate" error={errors.saleDate?.message}>
-              <Input id="saleDate" type="date" {...register("saleDate")} />
-            </FormField>
-
-            <FormField label="Termin płatności" htmlFor="dueDate" error={errors.dueDate?.message}>
-              <Input id="dueDate" type="date" {...register("dueDate")} />
-            </FormField>
-
-            <div className="space-y-2">
-              <label htmlFor="status" className="text-sm font-medium text-black/80 dark:text-white/80">
-                Status
-              </label>
-              <select
-                id="status"
-                className="h-11 w-full rounded-md border border-[#E5E5E5] bg-white px-3 text-sm dark:border-[#262626] dark:bg-black"
-                {...register("status")}
-              >
-                <option value="unpaid">Nieopłacona</option>
-                <option value="paid">Opłacona</option>
-              </select>
-            </div>
-          </section>
-
-          <section className="space-y-4">
-            <h3 className="font-display text-xl">Sprzedawca</h3>
-            <FormField label="Nazwa" htmlFor="issuerName" error={errors.issuerName?.message}>
-              <Input id="issuerName" {...register("issuerName")} />
-            </FormField>
-            <FormField label="NIP" htmlFor="issuerNip" error={errors.issuerNip?.message}>
-              <Input id="issuerNip" placeholder="526-00-01-222" {...register("issuerNip")} />
-            </FormField>
-            <FormField label="Adres" htmlFor="issuerAddress" error={errors.issuerAddress?.message}>
-              <Input id="issuerAddress" placeholder="ul. Wiejska 4, 00-902 Warszawa" {...register("issuerAddress")} />
-            </FormField>
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-xl">Nabywca</h3>
-              <Button type="button" size="sm" variant="outline" onClick={fetchCompanyFromGus}>
-                Pobierz dane z GUS
-              </Button>
-            </div>
-            <FormField label="Nazwa" htmlFor="clientName" error={errors.clientName?.message}>
-              <Input id="clientName" {...register("clientName")} />
-            </FormField>
-            <FormField label="NIP" htmlFor="clientNip" error={errors.clientNip?.message}>
-              <Input id="clientNip" placeholder="525-235-29-07" {...register("clientNip")} />
-            </FormField>
-            <FormField label="Adres" htmlFor="clientAddress" error={errors.clientAddress?.message}>
-              <Input id="clientAddress" placeholder="ul. Złota 44, 00-120 Warszawa" {...register("clientAddress")} />
-            </FormField>
-            {gusStatus ? <p className="text-xs text-gold-dark">{gusStatus}</p> : null}
-          </section>
-
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display text-xl">Pozycje</h3>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline"
-                onClick={() =>
-                  append({
-                    description: "",
-                    quantity: 1,
-                    unit: "szt",
-                    netPrice: "0.00",
-                    vatRate: "23",
-                  })
-                }
-              >
-                Dodaj pozycję
-              </Button>
-            </div>
-
-            {fields.map((field, index) => (
-              <div key={field.id} className="space-y-3 rounded-md border border-[#E5E5E5] p-4 dark:border-[#262626]">
-                <FormField
-                  label="Opis"
-                  htmlFor={`items.${index}.description`}
-                  error={errors.items?.[index]?.description?.message}
-                >
-                  <Input id={`items.${index}.description`} {...register(`items.${index}.description`)} />
-                </FormField>
-
-                <div className="grid gap-3 md:grid-cols-4">
-                  <FormField
-                    label="Ilość"
-                    htmlFor={`items.${index}.quantity`}
-                    error={errors.items?.[index]?.quantity?.message}
-                  >
-                    <Input
-                      id={`items.${index}.quantity`}
-                      type="number"
-                      step="0.01"
-                      {...register(`items.${index}.quantity`, { valueAsNumber: true })}
-                    />
-                  </FormField>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor={`items.${index}.unit`}
-                      className="text-sm font-medium text-black/80 dark:text-white/80"
-                    >
-                      Jednostka
-                    </label>
-                    <select
-                      id={`items.${index}.unit`}
-                      className="h-11 w-full rounded-md border border-[#E5E5E5] bg-white px-3 text-sm dark:border-[#262626] dark:bg-black"
-                      {...register(`items.${index}.unit`)}
-                    >
-                      <option value="szt">szt</option>
-                      <option value="godz">godz</option>
-                      <option value="km">km</option>
-                    </select>
-                  </div>
-
-                  <FormField
-                    label="Cena netto"
-                    htmlFor={`items.${index}.netPrice`}
-                    error={errors.items?.[index]?.netPrice?.message}
-                  >
-                    <Input id={`items.${index}.netPrice`} {...register(`items.${index}.netPrice`)} />
-                  </FormField>
-
-                  <div className="space-y-2">
-                    <label
-                      htmlFor={`items.${index}.vatRate`}
-                      className="text-sm font-medium text-black/80 dark:text-white/80"
-                    >
-                      Stawka VAT
-                    </label>
-                    <select
-                      id={`items.${index}.vatRate`}
-                      className="h-11 w-full rounded-md border border-[#E5E5E5] bg-white px-3 text-sm dark:border-[#262626] dark:bg-black"
-                      {...register(`items.${index}.vatRate`)}
-                    >
-                      <option value="23">23%</option>
-                      <option value="8">8%</option>
-                      <option value="5">5%</option>
-                      <option value="0">0%</option>
-                      <option value="zw">zw</option>
-                      <option value="np">np</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => remove(index)}
-                    disabled={fields.length === 1}
-                  >
-                    Usuń pozycję
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </section>
+          <InvoiceFormItems control={control} register={register} errors={errors} />
 
           {submitStatus ? <p className="text-sm text-gold-dark">{submitStatus}</p> : null}
 

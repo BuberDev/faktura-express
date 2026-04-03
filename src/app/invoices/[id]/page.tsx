@@ -28,7 +28,7 @@ export default async function InvoiceDetailPage({
     redirect("/auth/login");
   }
 
-  const repository = new SupabaseInvoiceRepository(supabase);
+  const repository = new SupabaseInvoiceRepository();
   const invoice = await repository.getByIdForUser(id, user.id);
 
   if (!invoice) {

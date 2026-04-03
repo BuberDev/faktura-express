@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       totalGross: totals.gross,
     };
 
-    const repository = new SupabaseInvoiceRepository(supabase);
+    const repository = new SupabaseInvoiceRepository();
     const invoiceId = await repository.create(invoiceEntity);
 
     return NextResponse.json({ id: invoiceId }, { status: 201 });

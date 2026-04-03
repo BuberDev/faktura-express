@@ -1,4 +1,6 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { eq } from "drizzle-orm";
+import { db } from "@/infrastructure/supabase/db";
+import { profiles } from "@/core/domain/schema";
 
 export interface ProfileEntity {
   id: string;
@@ -7,47 +9,65 @@ export interface ProfileEntity {
   nip: string | null;
   address: string | null;
   bankAccount: string | null;
+  goldSubscription: boolean | null;
 }
 
 export class SupabaseProfileRepository {
-  constructor(private readonly client: SupabaseClient) {}
-
   async getById(id: string): Promise<ProfileEntity | null> {
-    const { data, error } = await this.client
-      .from("profiles")
-      .select("*")
-      .eq("id", id)
-      .maybeSingle();
-
-    if (error) {
-      throw new Error(`Profile query failed: ${error.message}`);
-    }
+    const data = await db.query.profiles.findFirst({
+      where: eq(profiles.id, id),
+    });
 
     if (!data) return null;
 
     return {
       id: data.id,
       email: data.email,
-      companyName: data.company_name,
+      companyName: data.companyName,
       nip: data.nip,
       address: data.address,
-      bankAccount: data.bank_account,
+      bankAccount: data.bankAccount,
+      goldSubscription: data.goldSubscription,
     };
   }
 
-  async update(id: string, profile: Partial<ProfileEntity>): Promise<void> {
-    const { error } = await this.client
-      .from("profiles")
-      .update({
-        company_name: profile.companyName,
+  async upsert(profile: Partial<ProfileEntity> & { id: string; email: string }): Promise<ProfileEntity> {
+    const [result] = await db
+      .insert(profiles)
+      .values({
+        id: profile.id,
+        email: profile.email,
+        companyName: profile.companyName,
         nip: profile.nip,
         address: profile.address,
-        bank_account: profile.bankAccount,
+        bankAccount: profile.bankAccount,
+        goldSubscription: profile.goldSubscription,
       })
-      .eq("id", id);
+      .onConflictDoUpdate({
+        target: profiles.id,
+        set: {
+          companyName: profile.companyName,
+          nip: profile.nip,
+          address: profile.address,
+          bankAccount: profile.bankAccount,
+          goldSubscription: profile.goldSubscription,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
 
-    if (error) {
-      throw new Error(`Profile update failed: ${error.message}`);
+    if (!result) {
+      throw new Error("Failed to upsert profile");
     }
+
+    return {
+      id: result.id,
+      email: result.email,
+      companyName: result.companyName,
+      nip: result.nip,
+      address: result.address,
+      bankAccount: result.bankAccount,
+      goldSubscription: result.goldSubscription,
+    };
   }
 }

@@ -1,153 +1,108 @@
+import { eq, desc, and } from "drizzle-orm";
 import type { InvoiceEntity } from "@/core/domain/entities/invoice-entity";
-
-import type { SupabaseClient } from "@supabase/supabase-js";
-
-interface InvoiceRow {
-  id: string;
-  user_id: string;
-  number: string;
-  type: "VAT" | "Proforma" | "Correction";
-  issue_date: string;
-  sale_date: string;
-  due_date: string;
-  status: "unpaid" | "paid";
-  issuer_name: string;
-  issuer_nip: string;
-  issuer_address: string;
-  client_name: string;
-  client_nip: string;
-  client_address: string;
-  total_net: string;
-  total_vat: string;
-  total_gross: string;
-}
-
-interface InvoiceItemRow {
-  description: string;
-  quantity: number;
-  unit: "szt" | "godz" | "km";
-  net_price: string;
-  vat_rate: "23" | "8" | "5" | "0" | "zw" | "np";
-}
-
-function mapInvoiceToEntity(row: InvoiceRow, items: InvoiceItemRow[]): InvoiceEntity {
-  return {
-    id: row.id,
-    userId: row.user_id,
-    number: row.number,
-    type: row.type,
-    issueDate: row.issue_date,
-    saleDate: row.sale_date,
-    dueDate: row.due_date,
-    status: row.status,
-    issuer: {
-      name: row.issuer_name,
-      nip: row.issuer_nip,
-      address: row.issuer_address,
-    },
-    client: {
-      name: row.client_name,
-      nip: row.client_nip,
-      address: row.client_address,
-    },
-    items: items.map((item) => ({
-      description: item.description,
-      quantity: item.quantity,
-      unit: item.unit,
-      netPrice: item.net_price,
-      vatRate: item.vat_rate,
-    })),
-    totalNet: row.total_net,
-    totalVat: row.total_vat,
-    totalGross: row.total_gross,
-  };
-}
+import { db } from "@/infrastructure/supabase/db";
+import { invoices, invoiceItems } from "@/core/domain/schema";
 
 export class SupabaseInvoiceRepository {
-  constructor(private readonly client: SupabaseClient) {}
-
   async listByUser(userId: string): Promise<InvoiceEntity[]> {
-    const { data, error } = await this.client
-      .from("invoices")
-      .select("*")
-      .eq("user_id", userId)
-      .order("issue_date", { ascending: false });
+    const results = await db.query.invoices.findMany({
+      where: eq(invoices.userId, userId),
+      orderBy: [desc(invoices.issueDate)],
+      with: {
+        // Items are usually not needed in the list view, but if needed, they can be included
+      }
+    });
 
-    if (error) {
-      throw new Error(`Invoice list query failed: ${error.message}`);
-    }
-
-    const invoiceRows = (data ?? []) as InvoiceRow[];
-
-    return invoiceRows.map((invoice) => mapInvoiceToEntity(invoice, []));
+    return results.map((row) => this.mapToEntity(row, []));
   }
 
   async getByIdForUser(invoiceId: string, userId: string): Promise<InvoiceEntity | null> {
-    const { data, error } = await this.client
-      .from("invoices")
-      .select("*, invoice_items(*)")
-      .eq("id", invoiceId)
-      .eq("user_id", userId)
-      .maybeSingle();
+    const result = await db.query.invoices.findFirst({
+      where: and(eq(invoices.id, invoiceId), eq(invoices.userId, userId)),
+      with: {
+        invoiceItems: true
+      }
+    });
 
-    if (error) {
-      throw new Error(`Invoice detail query failed: ${error.message}`);
-    }
+    if (!result) return null;
 
-    if (!data) {
-      return null;
-    }
-
-    const invoiceRow = data as InvoiceRow & { invoice_items: InvoiceItemRow[] };
-
-    return mapInvoiceToEntity(invoiceRow, invoiceRow.invoice_items ?? []);
+    return this.mapToEntity(result, (result as any).invoiceItems ?? []);
   }
 
   async create(invoice: InvoiceEntity): Promise<string> {
-    const { data: invoiceInsert, error: invoiceError } = await this.client
-      .from("invoices")
-      .insert({
-        user_id: invoice.userId,
+    return await db.transaction(async (tx) => {
+      const [insertedInvoice] = await tx.insert(invoices).values({
+        userId: invoice.userId,
         number: invoice.number,
         type: invoice.type,
-        issue_date: invoice.issueDate,
-        sale_date: invoice.saleDate,
-        due_date: invoice.dueDate,
+        issueDate: invoice.issueDate,
+        saleDate: invoice.saleDate,
+        dueDate: invoice.dueDate,
         status: invoice.status,
-        issuer_name: invoice.issuer.name,
-        issuer_nip: invoice.issuer.nip,
-        issuer_address: invoice.issuer.address,
-        client_name: invoice.client.name,
-        client_nip: invoice.client.nip,
-        client_address: invoice.client.address,
-        total_net: invoice.totalNet,
-        total_vat: invoice.totalVat,
-        total_gross: invoice.totalGross,
-      })
-      .select("id")
-      .single();
+        issuerName: invoice.issuer.name,
+        issuerNip: invoice.issuer.nip,
+        issuerAddress: invoice.issuer.address,
+        clientName: invoice.client.name,
+        clientNip: invoice.client.nip,
+        clientAddress: invoice.client.address,
+        totalNet: invoice.totalNet,
+        totalVat: invoice.totalVat,
+        totalGross: invoice.totalGross,
+      }).returning({ id: invoices.id });
 
-    if (invoiceError || !invoiceInsert) {
-      throw new Error(`Invoice create query failed: ${invoiceError?.message}`);
-    }
+      if (!insertedInvoice) {
+        throw new Error("Failed to insert invoice");
+      }
 
-    const invoiceId = invoiceInsert.id as string;
+      const invoiceId = insertedInvoice.id;
 
-    const { error: itemsError } = await this.client.from("invoice_items").insert(
-      invoice.items.map((item) => ({
-        invoice_id: invoiceId,
+      if (invoice.items.length > 0) {
+        await tx.insert(invoiceItems).values(
+          invoice.items.map((item) => ({
+            invoiceId,
+            description: item.description,
+            quantity: item.quantity.toString(), // Drizzle numeric is string-based
+            unit: item.unit,
+            netPrice: item.netPrice,
+            vatRate: item.vatRate,
+          }))
+        );
+      }
+
+      return invoiceId;
+    });
+  }
+
+  private mapToEntity(row: any, items: any[]): InvoiceEntity {
+    return {
+      id: row.id,
+      userId: row.userId,
+      number: row.number,
+      type: row.type as any,
+      issueDate: row.issueDate,
+      saleDate: row.saleDate,
+      dueDate: row.dueDate,
+      status: row.status as any,
+      issuer: {
+        name: row.issuerName,
+        nip: row.issuerNip,
+        address: row.issuerAddress,
+      },
+      client: {
+        name: row.clientName,
+        nip: row.clientNip,
+        address: row.clientAddress,
+      },
+      items: items.map((item) => ({
         description: item.description,
-        quantity: item.quantity,
-        unit: item.unit,
-        net_price: item.netPrice,
-        vat_rate: item.vatRate,
+        quantity: parseFloat(item.quantity),
+        unit: item.unit as any,
+        netPrice: item.netPrice,
+        vatRate: item.vatRate as any,
       })),
-    );
-
-    if (itemsError) {
-      throw new Error(`Invoice item create query failed: ${itemsError.message}`);
-    }
-
-    return invoiceId;
+      totalNet: row.totalNet,
+      totalVat: row.totalVat,
+      totalGross: row.totalGross,
+    };
   }
 }
