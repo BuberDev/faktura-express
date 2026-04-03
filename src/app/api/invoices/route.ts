@@ -60,7 +60,14 @@ export async function POST(request: NextRequest) {
     const invoiceId = await repository.create(invoiceEntity);
 
     return NextResponse.json({ id: invoiceId }, { status: 201 });
-  } catch {
-    return NextResponse.json({ error: "Invoice create failed." }, { status: 500 });
+  } catch (error) {
+    console.error(" [Invoice Creation Error] ", error);
+    return NextResponse.json(
+      { 
+        error: "Nie udało się wystawić faktury.", 
+        details: error instanceof Error ? error.message : "Błąd serwera" 
+      }, 
+      { status: 500 }
+    );
   }
 }

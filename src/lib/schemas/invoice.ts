@@ -10,14 +10,24 @@ export const invoiceFormSchema = z.object({
   dueDate: z.string().min(1, "Termin płatności jest wymagany."),
   issuerName: z.string().min(1, "Nazwa sprzedawcy jest wymagana."),
   issuerNip: z.string().refine((value) => isValidNip(value), {
-    message: "NIP sprzedawcy jest niepoprawny.",
+    message: "NIP sprzedawcy jest niepoprawny (wymagane 10 cyfr).",
   }),
-  issuerAddress: z.string().min(1, "Adres sprzedawcy jest wymagany."),
+  issuerAddress: z
+    .string()
+    .min(10, "Adres sprzedawcy musi zawierać pełne dane (ulica, kod pocztowy, miasto).")
+    .refine((value) => /\d{2}-\d{3}/.test(value), {
+      message: "Adres musi zawierać kod pocztowy w formacie 00-000.",
+    }),
   clientName: z.string().min(1, "Nazwa nabywcy jest wymagana."),
   clientNip: z.string().refine((value) => isValidNip(value), {
-    message: "NIP nabywcy jest niepoprawny.",
+    message: "NIP nabywcy jest niepoprawny (wymagane 10 cyfr).",
   }),
-  clientAddress: z.string().min(1, "Adres nabywcy jest wymagany."),
+  clientAddress: z
+    .string()
+    .min(10, "Adres nabywcy musi zawierać pełne dane (ulica, kod pocztowy, miasto).")
+    .refine((value) => /\d{2}-\d{3}/.test(value), {
+      message: "Adres musi zawierać kod pocztowy w formacie 00-000.",
+    }),
   status: z.enum(["unpaid", "paid"]),
   items: z
     .array(

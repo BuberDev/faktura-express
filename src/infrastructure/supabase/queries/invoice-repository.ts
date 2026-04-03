@@ -11,6 +11,12 @@ interface InvoiceRow {
   sale_date: string;
   due_date: string;
   status: "unpaid" | "paid";
+  issuer_name: string;
+  issuer_nip: string;
+  issuer_address: string;
+  client_name: string;
+  client_nip: string;
+  client_address: string;
   total_net: string;
   total_vat: string;
   total_gross: string;
@@ -35,14 +41,14 @@ function mapInvoiceToEntity(row: InvoiceRow, items: InvoiceItemRow[]): InvoiceEn
     dueDate: row.due_date,
     status: row.status,
     issuer: {
-      name: "",
-      nip: "",
-      address: "",
+      name: row.issuer_name,
+      nip: row.issuer_nip,
+      address: row.issuer_address,
     },
     client: {
-      name: "",
-      nip: "",
-      address: "",
+      name: row.client_name,
+      nip: row.client_nip,
+      address: row.client_address,
     },
     items: items.map((item) => ({
       description: item.description,
@@ -108,6 +114,12 @@ export class SupabaseInvoiceRepository {
         sale_date: invoice.saleDate,
         due_date: invoice.dueDate,
         status: invoice.status,
+        issuer_name: invoice.issuer.name,
+        issuer_nip: invoice.issuer.nip,
+        issuer_address: invoice.issuer.address,
+        client_name: invoice.client.name,
+        client_nip: invoice.client.nip,
+        client_address: invoice.client.address,
         total_net: invoice.totalNet,
         total_vat: invoice.totalVat,
         total_gross: invoice.totalGross,

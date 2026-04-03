@@ -7,6 +7,8 @@ import { Card } from "@/components/ui/card";
 import { formatPlnCurrency } from "@/core/use-cases/format-currency";
 import { SupabaseInvoiceRepository } from "@/infrastructure/supabase/queries/invoice-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server-client";
+import { InvoicePdfDownloadButton } from "@/components/invoice/invoice-pdf-download-button";
+import { cn } from "@/lib/utils";
 
 export default async function InvoicesPage() {
   const supabase = await createSupabaseServerClient();
@@ -38,28 +40,44 @@ export default async function InvoicesPage() {
         ) : (
           <div className="overflow-x-auto rounded-md border border-[#E5E5E5] dark:border-[#262626]">
             <table className="w-full text-left text-sm">
-              <thead className="bg-black/5 dark:bg-white/5">
-                <tr>
-                  <th className="px-3 py-2">Numer</th>
-                  <th className="px-3 py-2">Data wystawienia</th>
-                  <th className="px-3 py-2">Status</th>
-                  <th className="px-3 py-2 text-right">Brutto</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invoices.map((invoice) => (
-                  <tr key={invoice.id} className="border-t border-[#E5E5E5] dark:border-[#262626]">
-                    <td className="px-3 py-2">
-                      <Link href={`/invoices/${invoice.id}`} className="text-gold-dark hover:underline">
-                        {invoice.number}
-                      </Link>
-                    </td>
-                    <td className="px-3 py-2">{invoice.issueDate}</td>
-                    <td className="px-3 py-2">{invoice.status === "paid" ? "Opłacona" : "Nieopłacona"}</td>
-                    <td className="px-3 py-2 text-right">{formatPlnCurrency(invoice.totalGross)}</td>
-                  </tr>
-                ))}
-              </tbody>
+                  <thead className="bg-black/5 text-xs font-semibold uppercase tracking-wider dark:bg-white/5">
+                    <tr>
+                      <th className="px-4 py-3">Numer</th>
+                      <th className="px-4 py-3">Data</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">Brutto</th>
+                      <th className="px-4 py-3 text-right">Akcje</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E5E5E5] dark:divide-[#262626]">
+                    {invoices.map((invoice) => (
+                      <tr key={invoice.id} className="hover:bg-black/[0.02] dark:hover:bg-white/[0.02]">
+                        <td className="px-4 py-4 font-medium">{invoice.number}</td>
+                        <td className="px-4 py-4 text-black/60 dark:text-white/60">{invoice.issueDate}</td>
+                        <td className="px-4 py-4">
+                          <span className={cn(
+                            "rounded-full px-2 py-1 text-[10px] font-bold uppercase",
+                            invoice.status === "paid" 
+                              ? "bg-green-500/10 text-green-600 dark:text-green-400" 
+                              : "bg-gold/10 text-gold-dark dark:text-gold-light"
+                          )}>
+                            {invoice.status === "paid" ? "Opłacona" : "Nieopłacona"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 font-semibold">{formatPlnCurrency(invoice.totalGross)}</td>
+                        <td className="px-4 py-4 text-right">
+                          <div className="flex justify-end gap-2">
+                            <InvoicePdfDownloadButton invoice={invoice} variant="outline" className="h-8 w-auto px-3" />
+                            <Link href={`/invoices/${invoice.id}`}>
+                              <Button variant="outline" size="sm" className="h-8">
+                                Otwórz
+                              </Button>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
             </table>
           </div>
         )}

@@ -5,6 +5,9 @@ import type { InvoiceItemInput, VatRate } from "@/core/domain/types/invoice";
 const NO_VAT_RATES: VatRate[] = ["zw", "np", "0"];
 
 function decimalFromValue(value: string | number): Decimal {
+  if (typeof value === "string") {
+    return new Decimal(value.replace(",", ".") || 0);
+  }
   return new Decimal(value || 0);
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
+import type { InvoiceEntity } from "@/core/domain/entities/invoice-entity";
+import { calculateInvoiceTotals } from "@/core/use-cases/calculate-vat";
 import { isValidNip, normalizeNip } from "@/core/use-cases/validate-nip";
 import { invoiceFormSchema, type InvoiceFormValues } from "@/lib/schemas/invoice";
 import { cn } from "@/lib/utils";
@@ -67,6 +69,29 @@ export function InvoiceWorkspace() {
 
   const watchedValues = useWatch({ control }) as InvoiceFormValues;
 
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const response = await fetch("/api/profile");
+        if (response.ok) {
+          const profile = (await response.json()) as {
+            companyName?: string;
+            nip?: string;
+            address?: string;
+          };
+
+          if (profile.companyName) setValue("issuerName", profile.companyName);
+          if (profile.nip) setValue("issuerNip", profile.nip);
+          if (profile.address) setValue("issuerAddress", profile.address);
+        }
+      } catch (err) {
+        console.error("Failed to load profile for pre-fill:", err);
+      }
+    }
+
+    loadProfile();
+  }, [setValue]);
+
   async function fetchCompanyFromGus(): Promise<void> {
     const rawNip = getValues("clientNip");
     const normalizedNip = normalizeNip(rawNip);
@@ -98,6 +123,38 @@ export function InvoiceWorkspace() {
     } catch {
       setGusStatus("Wystąpił błąd podczas komunikacji z GUS.");
     }
+  }
+
+  function getPreviewInvoice(): InvoiceEntity {
+    const values = watchedValues ?? defaultInvoiceValues;
+    const totals = calculateInvoiceTotals(values.items);
+    return {
+      id: "preview",
+      userId: "preview",
+      number: values.number,
+      type: values.type,
+      issueDate: values.issueDate,
+      saleDate: values.saleDate,
+      dueDate: values.dueDate,
+      status: values.status,
+      issuer: {
+        name: values.issuerName,
+        nip: values.issuerNip,
+        address: values.issuerAddress,
+      },
+      client: {
+        name: values.clientName,
+        nip: values.clientNip,
+        address: values.clientAddress,
+      },
+      items: values.items.map((item) => ({
+        ...item,
+        netPrice: item.netPrice,
+      })),
+      totalNet: totals.net,
+      totalVat: totals.vat,
+      totalGross: totals.gross,
+    };
   }
 
   async function onSubmit(values: InvoiceFormValues): Promise<void> {
@@ -207,10 +264,10 @@ export function InvoiceWorkspace() {
               <Input id="issuerName" {...register("issuerName")} />
             </FormField>
             <FormField label="NIP" htmlFor="issuerNip" error={errors.issuerNip?.message}>
-              <Input id="issuerNip" {...register("issuerNip")} />
+              <Input id="issuerNip" placeholder="526-00-01-222" {...register("issuerNip")} />
             </FormField>
             <FormField label="Adres" htmlFor="issuerAddress" error={errors.issuerAddress?.message}>
-              <Input id="issuerAddress" {...register("issuerAddress")} />
+              <Input id="issuerAddress" placeholder="ul. Wiejska 4, 00-902 Warszawa" {...register("issuerAddress")} />
             </FormField>
           </section>
 
@@ -225,10 +282,10 @@ export function InvoiceWorkspace() {
               <Input id="clientName" {...register("clientName")} />
             </FormField>
             <FormField label="NIP" htmlFor="clientNip" error={errors.clientNip?.message}>
-              <Input id="clientNip" {...register("clientNip")} />
+              <Input id="clientNip" placeholder="525-235-29-07" {...register("clientNip")} />
             </FormField>
             <FormField label="Adres" htmlFor="clientAddress" error={errors.clientAddress?.message}>
-              <Input id="clientAddress" {...register("clientAddress")} />
+              <Input id="clientAddress" placeholder="ul. Złota 44, 00-120 Warszawa" {...register("clientAddress")} />
             </FormField>
             {gusStatus ? <p className="text-xs text-gold-dark">{gusStatus}</p> : null}
           </section>
@@ -355,7 +412,7 @@ export function InvoiceWorkspace() {
           )}
         >
           <InvoiceLivePreview values={watchedValues ?? defaultInvoiceValues} />
-          <InvoicePdfDownloadButton values={watchedValues ?? defaultInvoiceValues} />
+          <InvoicePdfDownloadButton invoice={getPreviewInvoice()} variant="gold" />
         </aside>
       </div>
     </div>

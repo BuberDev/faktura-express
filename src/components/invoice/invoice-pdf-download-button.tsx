@@ -9,50 +9,50 @@ import { InvoicePdfService } from "@/infrastructure/pdf/invoice-pdf-service";
 import type { InvoiceFormValues } from "@/lib/schemas/invoice";
 
 interface InvoicePdfDownloadButtonProps {
-  values: InvoiceFormValues;
+  invoice: InvoiceEntity;
+  variant?: "outline" | "primary" | "gold";
+  className?: string;
 }
 
-export function InvoicePdfDownloadButton({ values }: InvoicePdfDownloadButtonProps) {
+export function InvoicePdfDownloadButton({ 
+  invoice, 
+  variant = "outline",
+  className = "w-full"
+}: InvoicePdfDownloadButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   async function downloadPdf(): Promise<void> {
     setIsLoading(true);
-
-    const totals = calculateInvoiceTotals(values.items);
-    const invoice: InvoiceEntity = {
-      id: "preview-invoice",
-      userId: "preview-user",
-      number: values.number,
-      type: values.type,
-      issueDate: values.issueDate,
-      saleDate: values.saleDate,
-      dueDate: values.dueDate,
-      status: values.status,
-      issuer: {
-        name: values.issuerName,
-        nip: values.issuerNip,
-        address: values.issuerAddress,
-      },
-      client: {
-        name: values.clientName,
-        nip: values.clientNip,
-        address: values.clientAddress,
-      },
-      items: values.items,
-      totalNet: totals.net,
-      totalVat: totals.vat,
-      totalGross: totals.gross,
-    };
-
-    const service = new InvoicePdfService();
-    await service.download(invoice, `${values.number || "faktura"}.pdf`);
-
-    setIsLoading(false);
+    try {
+      const service = new InvoicePdfService();
+      await service.download(invoice, `${invoice.number || "faktura"}.pdf`);
+    } catch (err) {
+      console.error("PDF Download failed:", err);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
+  const getVariantStyles = () => {
+    switch (variant) {
+      case "gold":
+        return "bg-gold-metallic text-black hover:opacity-90 border-none shadow-gold-sm hover:shadow-gold-md transition-all";
+      default:
+        return "";
+    }
+  };
+
   return (
-    <Button className="w-full" variant="outline" onClick={downloadPdf} disabled={isLoading}>
-      {isLoading ? "Generowanie PDF..." : "Pobierz PDF"}
+    <Button 
+      className={`${className} ${getVariantStyles()}`}
+      variant={variant === "gold" ? "primary" : variant}
+      onClick={downloadPdf} 
+      disabled={isLoading}
+    >
+      <lucide.Download className="mr-2 h-4 w-4" />
+      {isLoading ? "Generowanie..." : "Pobierz PDF"}
     </Button>
   );
 }
+
+import * as lucide from "lucide-react";
