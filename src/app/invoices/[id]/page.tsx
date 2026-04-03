@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatPlnCurrency } from "@/core/use-cases/format-currency";
 import { SupabaseInvoiceRepository } from "@/infrastructure/supabase/queries/invoice-repository";
+import { SupabaseProfileRepository } from "@/infrastructure/supabase/queries/profile-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server-client";
 import { ChevronLeft } from "lucide-react";
 
@@ -29,7 +30,12 @@ export default async function InvoiceDetailPage({
   }
 
   const repository = new SupabaseInvoiceRepository();
-  const invoice = await repository.getByIdForUser(id, user.id);
+  const profileRepository = new SupabaseProfileRepository();
+
+  const [invoice, profile] = await Promise.all([
+    repository.getByIdForUser(id, user.id),
+    profileRepository.getById(user.id).catch(() => null),
+  ]);
 
   if (!invoice) {
     notFound();
@@ -40,6 +46,7 @@ export default async function InvoiceDetailPage({
       title={`Faktura ${invoice.number}`}
       subtitle="Szczegóły dokumentu i pozycje sprzedaży."
       userEmail={user.email}
+      avatarUrl={profile?.avatarUrl}
     >
       <Card className="space-y-4">
         <div className="grid gap-3 md:grid-cols-2">

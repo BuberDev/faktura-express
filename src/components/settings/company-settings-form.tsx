@@ -93,7 +93,7 @@ export function CompanySettingsForm() {
   return (
     <form className="max-w-2xl space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <FormField label="Nazwa firmy" htmlFor="companyName" error={errors.companyName?.message}>
-        <Input id="companyName" placeholder="Faktura Express Sp. z o.o." {...register("companyName")} />
+        <Input id="companyName" placeholder="Faktura In Sp. z o.o." {...register("companyName")} />
       </FormField>
 
       <FormField label="NIP" htmlFor="nip" error={errors.nip?.message}>

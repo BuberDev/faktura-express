@@ -28,6 +28,7 @@ interface SignInPageProps {
   onGoogleSignIn?: () => void;
   onResetPassword?: () => void;
   onCreateAccount?: () => void;
+  googleButtonContainerId?: string;
 }
 
 const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (

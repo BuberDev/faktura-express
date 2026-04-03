@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatPlnCurrency } from "@/core/use-cases/format-currency";
 import { SupabaseInvoiceRepository } from "@/infrastructure/supabase/queries/invoice-repository";
+import { SupabaseProfileRepository } from "@/infrastructure/supabase/queries/profile-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server-client";
 import { InvoicePdfDownloadButton } from "@/components/invoice/invoice-pdf-download-button";
 import { cn } from "@/lib/utils";
@@ -21,10 +22,20 @@ export default async function InvoicesPage() {
   }
 
   const repository = new SupabaseInvoiceRepository();
-  const invoices = await repository.listByUser(user.id).catch(() => []);
+  const profileRepository = new SupabaseProfileRepository();
+  
+  const [invoices, profile] = await Promise.all([
+    repository.listByUser(user.id).catch(() => []),
+    profileRepository.getById(user.id).catch(() => null),
+  ]);
 
   return (
-    <AppShell title="Faktury" subtitle="Lista dokumentów przypisana do Twojego konta." userEmail={user.email}>
+    <AppShell 
+      title="Faktury" 
+      subtitle="Lista dokumentów przypisana do Twojego konta." 
+      userEmail={user.email}
+      avatarUrl={profile?.avatarUrl}
+    >
       <Card className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-2xl">Twoje faktury</h2>

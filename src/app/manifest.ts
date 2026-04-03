@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Faktura Express",
-    short_name: "FakturaExpress",
+    name: "Faktura In",
+    short_name: "fakturain",
     description: "Najszybsze darmowe fakturowanie B2B online.",
     start_url: "/",
     display: "standalone",

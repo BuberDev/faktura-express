@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import Script from "next/script";
 
 import "./globals.css";
 
-const siteUrl = "https://faktura-express.pl";
+const inter = Inter({ subsets: ["latin"] });
+const siteUrl = "https://fakturain.pl";
 
 export const viewport: Viewport = {
   themeColor: "#000000",
@@ -13,14 +16,14 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Faktura Express | Darmowe Faktury B2B w 10 Sekund",
-    template: "%s | Faktura Express",
+    default: "Faktura In | Darmowe Faktury B2B w 10 Sekund",
+    template: "%s | Faktura In",
   },
   description: "Najszybszy sposób na wystawianie profesjonalnych faktur online. Darmowe narzędzie B2B z podglądem PDF na żywo, bezpieczne i zgodne z polskim prawem.",
   keywords: ["faktura", "darmowe faktury", "fakturowanie online", "B2B", "faktura VAT", "proforma", "korekta", "GUS API"],
-  authors: [{ name: "Faktura Express Team" }],
-  creator: "Faktura Express",
-  publisher: "Faktura Express",
+  authors: [{ name: "Faktura In Team" }],
+  creator: "Faktura In",
+  publisher: "Faktura In",
   formatDetection: {
     email: false,
     address: false,
@@ -30,21 +33,21 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pl_PL",
     url: siteUrl,
-    siteName: "Faktura Express",
-    title: "Faktura Express | Darmowe Faktury B2B",
+    siteName: "Faktura In",
+    title: "Faktura In | Darmowe Faktury B2B",
     description: "Wystawiaj profesjonalne faktury PDF w 10 sekund. Bez opłat, bez zbędnych formalności.",
     images: [
       {
         url: "/logo.png",
         width: 1200,
         height: 630,
-        alt: "Faktura Express Logo",
+        alt: "Faktura In Logo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Faktura Express | Darmowe Faktury Online",
+    title: "Faktura In | Darmowe Faktury Online",
     description: "Profesjonalne fakturowanie dla nowoczesnych firm B2B.",
     images: ["/logo.png"],
   },
@@ -69,7 +72,7 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "Faktura Express",
+    "name": "Faktura In",
     "operatingSystem": "Web",
     "applicationCategory": "BusinessApplication",
     "offers": {
@@ -93,7 +96,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-full bg-background text-foreground">
+      <body className={`${inter.className} min-h-screen bg-background font-sans antialiased`}>
         {children}
       </body>
     </html>

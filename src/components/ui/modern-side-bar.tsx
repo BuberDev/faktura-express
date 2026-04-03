@@ -29,6 +29,7 @@ interface NavigationItem {
 interface SidebarProps {
   className?: string;
   userEmail?: string | null;
+  avatarUrl?: string | null;
 }
 
 const navigationItems: NavigationItem[] = [
@@ -77,7 +78,7 @@ function isRouteActive(currentPathname: string, itemHref: string): boolean {
   return currentPathname === itemHref;
 }
 
-export function Sidebar({ className = "", userEmail = null }: SidebarProps) {
+export function Sidebar({ className = "", userEmail = null, avatarUrl = null }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -137,7 +138,7 @@ export function Sidebar({ className = "", userEmail = null }: SidebarProps) {
         <div className="flex h-full w-full flex-col">
           <div className="flex items-center justify-between border-b border-[#E5E5E5] p-4 dark:border-[#262626]">
             <div className={cn("overflow-hidden", isCollapsed ? "hidden" : "block")}>
-              <p className="font-display text-xl text-black dark:text-white">Faktura Express</p>
+              <p className="font-display text-xl text-black dark:text-white">Faktura In</p>
               <p className="text-xs text-black/60 dark:text-white/60">Panel aplikacji</p>
             </div>
 
@@ -191,8 +192,17 @@ export function Sidebar({ className = "", userEmail = null }: SidebarProps) {
                 isCollapsed ? "justify-center" : "gap-2.5",
               )}
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-full border border-gold-subtle bg-gold-metallic text-xs font-semibold text-black">
-                {getEmailInitials(userEmail)}
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-gold-subtle bg-gold-metallic text-xs font-semibold text-black">
+                {avatarUrl ? (
+                  <img
+                    src={avatarUrl}
+                    alt={userEmail || "User"}
+                    className="h-full w-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  getEmailInitials(userEmail)
+                )}
               </div>
               <div className={cn("min-w-0", isCollapsed ? "hidden" : "block")}>
                 <p className="truncate text-sm font-medium">{getEmailShortName(userEmail)}</p>

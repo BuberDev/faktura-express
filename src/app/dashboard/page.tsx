@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { AppShell } from "@/components/layout/app-shell";
 import { Card } from "@/components/ui/card";
 import { SupabaseInvoiceRepository } from "@/infrastructure/supabase/queries/invoice-repository";
+import { SupabaseProfileRepository } from "@/infrastructure/supabase/queries/profile-repository";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server-client";
 
 export default async function DashboardPage() {
@@ -16,7 +17,12 @@ export default async function DashboardPage() {
   }
 
   const repository = new SupabaseInvoiceRepository();
-  const invoices = await repository.listByUser(user.id).catch(() => []);
+  const profileRepository = new SupabaseProfileRepository();
+  
+  const [invoices, profile] = await Promise.all([
+    repository.listByUser(user.id).catch(() => []),
+    profileRepository.getById(user.id).catch(() => null),
+  ]);
 
   const pendingInvoices = invoices.filter((invoice) => invoice.status === "unpaid").length;
   const paidThisMonth = invoices.filter((invoice) => {
@@ -38,6 +44,7 @@ export default async function DashboardPage() {
       title="Panel główny"
       subtitle="Najważniejsze informacje o fakturach i statusach płatności."
       userEmail={user.email}
+      avatarUrl={profile?.avatarUrl}
     >
       <div className="grid gap-4 md:grid-cols-3">
         <Card>

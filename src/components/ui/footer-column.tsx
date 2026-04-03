@@ -35,12 +35,12 @@ const data = {
     livechat: "/auth/login",
   },
   contact: {
-    email: "kontakt@fakturaexpress.pl",
+    email: "kontakt@fakturain.pl",
     phone: "+48 500 700 900",
     address: "Warszawa, Polska",
   },
   company: {
-    name: "Faktura Express",
+    name: "Faktura In",
     description:
       "Nowoczesne fakturowanie B2B dla polskich przedsiębiorców. Szybko, bezpiecznie i w standardzie premium.",
     logo: "/logo.png",

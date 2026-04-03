@@ -16,6 +16,7 @@ export const profiles = pgTable("profiles", {
   nip: text("nip"),
   address: text("address"),
   bankAccount: text("bank_account"),
+  avatarUrl: text("avatar_url"),
   goldSubscription: boolean("gold_subscription").default(false),
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),

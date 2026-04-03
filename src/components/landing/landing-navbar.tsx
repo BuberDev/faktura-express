@@ -37,23 +37,22 @@ export function LandingNavbar() {
       className="fixed inset-x-0 top-0 z-50 px-3 pt-3 md:px-6"
     >
       <div
-        className={`mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between rounded-2xl border px-4 transition-all duration-300 md:px-6 ${
-          isScrolled
+        className={`mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between rounded-2xl border px-4 transition-all duration-300 md:px-6 ${isScrolled
             ? "border-gold-subtle bg-white/78 shadow-gold-md backdrop-blur-xl dark:bg-black/72"
             : "border-gold-subtle/45 bg-white/35 backdrop-blur-md dark:bg-black/35"
-        }`}
+          }`}
       >
         <Link href="/" className="group inline-flex items-center gap-3">
           <Image
             src="/logo.png"
-            alt="Faktura Express"
+            alt="Faktura In"
             width={36}
             height={36}
             priority
             className="h-9 w-9 rounded-full object-cover shadow-gold-sm"
           />
           <span className="font-display text-2xl tracking-wide transition-colors group-hover:text-gold-dark dark:group-hover:text-gold-light">
-            Faktura Express
+            Faktura In
           </span>
         </Link>
 

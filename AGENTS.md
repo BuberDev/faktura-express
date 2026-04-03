@@ -1,6 +1,6 @@
-Specyfikacja Techniczna: Project "Faktura Express"
+Specyfikacja Techniczna: Project "Faktura In"
 1. Project Overview & Identity
-Name: Faktura Express
+Name: Faktura In
 Target Audience: Polish entrepreneurs (B2B).
 Primary Language: UI in Polish, Source Code/URLs/Database in English.
 Core Value: Premium, fast, and secure invoicing for free.

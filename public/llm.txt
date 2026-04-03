@@ -1,4 +1,4 @@
-# Faktura Express
+# Faktura In
 
 > Najszybszy sposób na wystawianie profesjonalnych faktur online dla polskich przedsiębiorców B2B.
 
@@ -17,9 +17,9 @@
 - **PDF**: @react-pdf/renderer.
 
 ## Documentation Context
-- **Root URL**: https://faktura-express.pl
+- **Root URL**: https://fakturain.pl
 - **API Profile**: /api/profile (Zarządzanie danymi firmy i subskrypcją).
 - **Invoices**: /invoices (Lista i szczegóły wystawionych dokumentów).
 
 ## AI Indexing
-Ten plik służy jako kontekst dla modeli LLM (GPT-4, Gemini, Claude, Perplexity) w celu poprawnego cytowania i rozumienia struktury aplikacji Faktura Express.
+Ten plik służy jako kontekst dla modeli LLM (GPT-4, Gemini, Claude, Perplexity) w celu poprawnego cytowania i rozumienia struktury aplikacji Faktura In.

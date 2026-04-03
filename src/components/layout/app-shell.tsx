@@ -8,14 +8,15 @@ interface AppShellProps {
   title: string;
   subtitle?: string;
   userEmail?: string | null;
+  avatarUrl?: string | null;
   children: ReactNode;
 }
 
-export function AppShell({ title, subtitle, userEmail = null, children }: AppShellProps) {
+export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, children }: AppShellProps) {
   return (
     <div className="min-h-screen bg-white text-black dark:bg-black dark:text-white">
       <div className="flex min-h-screen">
-        <Sidebar userEmail={userEmail} />
+        <Sidebar userEmail={userEmail} avatarUrl={avatarUrl} />
 
         <div className="flex min-h-screen flex-1 flex-col">
           <header className="sticky top-0 z-20 border-b border-gold-subtle bg-gradient-to-r from-white via-[#FCF6BA]/35 to-white dark:bg-dark-surface">
@@ -24,7 +25,7 @@ export function AppShell({ title, subtitle, userEmail = null, children }: AppShe
                 href="/dashboard"
                 className="pl-12 font-display text-xl tracking-wide text-black md:pl-0 dark:text-white"
               >
-                Faktura Express
+                Faktura In
               </Link>
               <SignOutButton className="md:hidden" />
             </div>

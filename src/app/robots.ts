@@ -15,6 +15,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/", "/dashboard/", "/invoices/"],
       },
     ],
-    sitemap: "https://faktura-express.pl/sitemap.xml",
+    sitemap: "https://fakturain.pl/sitemap.xml",
   };
 }

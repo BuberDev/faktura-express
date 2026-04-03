@@ -1,12 +1,14 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { SignInPage, type Testimonial } from "@/components/ui/sign-in";
 import { loginSchema } from "@/lib/schemas/auth";
 import { hasSupabaseEnvironment } from "@/infrastructure/supabase/env";
 import { getSupabaseBrowserClient } from "@/infrastructure/supabase/browser-client";
+import { syncUserAvatarAction } from "@/app/actions/profile";
+
 
 const sampleTestimonials: Testimonial[] = [
   {
@@ -88,22 +90,41 @@ export function LoginForm({ initialFormError = null }: LoginFormProps) {
   }
 
   async function onGoogleSignIn(): Promise<void> {
-    if (!hasSupabaseEnvironment) {
-      setFormError("Brakuje konfiguracji Supabase w zmiennych środowiskowych.");
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    if (!clientId) {
+      setFormError("Brakuje NEXT_PUBLIC_GOOGLE_CLIENT_ID.");
       return;
     }
 
-    const client = getSupabaseBrowserClient();
-    const { error } = await client.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    // CORRECT OpenID Connect nonce flow:
+    // 1. Generate raw nonce
+    const rawNonce = crypto.randomUUID();
 
-    if (error) {
-      setFormError(error.message || "Logowanie Google nie powiodło się.");
-    }
+    // 2. Hash it with SHA-256 (what Google will store in the JWT)
+    const encoder = new TextEncoder();
+    const data = encoder.encode(rawNonce);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashedNonce = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+
+    // 3. Store the ORIGINAL (unhashed) nonce - Supabase will hash it internally
+    localStorage.setItem("google_auth_nonce", rawNonce);
+
+    // 4. Send the HASH to Google as the nonce parameter
+    const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+    const redirectUri = isLocalhost
+      ? "http://localhost:3000/auth/callback"
+      : "https://fakturain.pl/auth/callback";
+
+    const googleAuthUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+    googleAuthUrl.searchParams.set("client_id", clientId);
+    googleAuthUrl.searchParams.set("redirect_uri", redirectUri);
+    googleAuthUrl.searchParams.set("response_type", "id_token");
+    googleAuthUrl.searchParams.set("scope", "openid email profile");
+    googleAuthUrl.searchParams.set("nonce", hashedNonce); // << HASH, not raw
+    googleAuthUrl.searchParams.set("prompt", "select_account");
+
+    window.location.href = googleAuthUrl.toString();
   }
 
   function onResetPassword(): void {
@@ -116,7 +137,7 @@ export function LoginForm({ initialFormError = null }: LoginFormProps) {
 
   return (
     <SignInPage
-      title={<span className="font-light tracking-tighter">Logowanie</span>}
+      title={<span className="font-light tracking-tighter text-foreground">Logowanie</span>}
       description={
         <span>
           Zaloguj się, aby wystawiać faktury i zarządzać klientami.
