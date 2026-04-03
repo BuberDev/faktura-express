@@ -15,7 +15,7 @@ export default async function DashboardPage() {
     redirect("/auth/login");
   }
 
-  const repository = new SupabaseInvoiceRepository(supabase);
+  const repository = new SupabaseInvoiceRepository();
   const invoices = await repository.listByUser(user.id).catch(() => []);
 
   const pendingInvoices = invoices.filter((invoice) => invoice.status === "unpaid").length;
