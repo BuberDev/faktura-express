@@ -1,27 +1,27 @@
+import { redirect } from "next/navigation";
+
 import { AccountLinkingCard } from "@/components/auth/account-linking-card";
 import { AppShell } from "@/components/layout/app-shell";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { ProfileSettingsForm } from "@/components/settings/profile-settings-form";
+import { createSupabaseServerClient } from "@/infrastructure/supabase/server-client";
 
-export default function ProfileSettingsPage() {
+export default async function ProfileSettingsPage() {
+  const supabase = await createSupabaseServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/auth/login");
+  }
+
   return (
-    <AppShell title="Ustawienia profilu" subtitle="Dane konta właściciela i preferencje logowania.">
-      <Card className="max-w-2xl space-y-4">
-        <div className="space-y-2">
-          <label htmlFor="fullName" className="text-sm font-medium">
-            Imię i nazwisko
-          </label>
-          <Input id="fullName" placeholder="Jan Kowalski" />
-        </div>
-        <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium">
-            Adres e-mail
-          </label>
-          <Input id="email" type="email" placeholder="jan@firma.pl" />
-        </div>
-        <Button>Zapisz zmiany</Button>
-      </Card>
+    <AppShell
+      title="Ustawienia profilu"
+      subtitle="Dane konta właściciela i preferencje logowania."
+      userEmail={user.email}
+    >
+      <ProfileSettingsForm />
       <div className="mt-4">
         <AccountLinkingCard />
       </div>

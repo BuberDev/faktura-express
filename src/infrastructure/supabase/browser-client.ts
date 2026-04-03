@@ -9,7 +9,11 @@ let browserClient: SupabaseClient | null = null;
 
 export function getSupabaseBrowserClient(): SupabaseClient {
   if (!browserClient) {
-    browserClient = createBrowserClient(supabaseEnv.url, supabaseEnv.anonKey);
+    browserClient = createBrowserClient(supabaseEnv.url, supabaseEnv.anonKey, {
+      auth: {
+        flowType: "pkce",
+      },
+    });
   }
 
   return browserClient;

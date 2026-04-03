@@ -1,0 +1,42 @@
+<svg width="1280" height="880" viewBox="0 0 1280 880" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="1280" height="880" fill="#0B0B0B"/>
+  <rect x="190" y="80" width="900" height="720" rx="24" fill="#111111" stroke="#D4AF37" stroke-width="2"/>
+
+  <text x="250" y="176" fill="#FCF6BA" font-size="40" font-family="Arial, sans-serif" font-weight="700">FAKTURA VAT 04/2026</text>
+  <text x="250" y="210" fill="#D4AF37" font-size="18" font-family="Arial, sans-serif">Data wystawienia: 02.04.2026</text>
+
+  <rect x="250" y="248" width="780" height="1" fill="#2A2A2A"/>
+
+  <text x="250" y="300" fill="#FFFFFF" font-size="17" font-family="Arial, sans-serif" font-weight="700">Sprzedawca</text>
+  <text x="250" y="330" fill="#D7D7D7" font-size="15" font-family="Arial, sans-serif">Faktura Express Sp. z o.o.</text>
+  <text x="250" y="354" fill="#D7D7D7" font-size="15" font-family="Arial, sans-serif">NIP: 5252739428</text>
+
+  <text x="700" y="300" fill="#FFFFFF" font-size="17" font-family="Arial, sans-serif" font-weight="700">Nabywca</text>
+  <text x="700" y="330" fill="#D7D7D7" font-size="15" font-family="Arial, sans-serif">Nowak Consulting</text>
+  <text x="700" y="354" fill="#D7D7D7" font-size="15" font-family="Arial, sans-serif">NIP: 7831749123</text>
+
+  <rect x="250" y="392" width="780" height="182" rx="12" fill="#0F0F0F" stroke="#252525"/>
+  <text x="278" y="432" fill="#FCF6BA" font-size="14" font-family="Arial, sans-serif">Nazwa</text>
+  <text x="720" y="432" fill="#FCF6BA" font-size="14" font-family="Arial, sans-serif">Netto</text>
+  <text x="840" y="432" fill="#FCF6BA" font-size="14" font-family="Arial, sans-serif">VAT</text>
+  <text x="940" y="432" fill="#FCF6BA" font-size="14" font-family="Arial, sans-serif">Brutto</text>
+
+  <rect x="272" y="452" width="736" height="1" fill="#262626"/>
+  <text x="278" y="488" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">Usługa księgowa - marzec 2026</text>
+  <text x="720" y="488" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">1 500,00 zł</text>
+  <text x="840" y="488" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">23%</text>
+  <text x="940" y="488" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">1 845,00 zł</text>
+
+  <rect x="272" y="510" width="736" height="1" fill="#262626"/>
+  <text x="278" y="544" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">Wsparcie administracyjne</text>
+  <text x="720" y="544" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">900,00 zł</text>
+  <text x="840" y="544" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">23%</text>
+  <text x="940" y="544" fill="#EFEFEF" font-size="15" font-family="Arial, sans-serif">1 107,00 zł</text>
+
+  <rect x="704" y="628" width="326" height="114" rx="12" fill="#141414" stroke="#D4AF37" stroke-opacity="0.35"/>
+  <text x="732" y="668" fill="#FCF6BA" font-size="14" font-family="Arial, sans-serif">Razem brutto</text>
+  <text x="732" y="708" fill="#D4AF37" font-size="32" font-family="Arial, sans-serif" font-weight="700">2 952,00 zł</text>
+
+  <circle cx="995" cy="162" r="24" fill="#D4AF37"/>
+  <path d="M985 162.5L992.5 170L1007 155.5" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -35,6 +35,7 @@ export default async function InvoiceDetailPage({
     <AppShell
       title={`Faktura ${invoice.number}`}
       subtitle="Szczegóły dokumentu i pozycje sprzedaży."
+      userEmail={user.email}
     >
       <Card className="space-y-4">
         <div className="grid gap-3 md:grid-cols-2">

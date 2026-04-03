@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -41,6 +42,7 @@ const defaultInvoiceValues: InvoiceFormValues = {
 };
 
 export function InvoiceWorkspace() {
+  const router = useRouter();
   const [activeMobilePanel, setActiveMobilePanel] = useState<"form" | "preview">("form");
   const [gusStatus, setGusStatus] = useState<string | null>(null);
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
@@ -99,7 +101,30 @@ export function InvoiceWorkspace() {
   }
 
   async function onSubmit(values: InvoiceFormValues): Promise<void> {
-    setSubmitStatus(`Faktura ${values.number} jest gotowa do zapisu w bazie Supabase.`);
+    setSubmitStatus("Zapisywanie faktury...");
+
+    try {
+      const response = await fetch("/api/invoices", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+
+      const payload = (await response.json()) as { id?: string; error?: string };
+
+      if (!response.ok || !payload.id) {
+        setSubmitStatus(payload.error || "Nie udało się zapisać faktury.");
+        return;
+      }
+
+      setSubmitStatus("Faktura została zapisana. Przekierowanie do szczegółów...");
+      router.push(`/invoices/${payload.id}`);
+      router.refresh();
+    } catch {
+      setSubmitStatus("Wystąpił błąd podczas zapisu faktury.");
+    }
   }
 
   return (

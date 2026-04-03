@@ -1,13 +1,14 @@
-import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginForm } from "@/components/auth/login-form";
 
-export default function LoginPage() {
-  return (
-    <AuthShell
-      title="Logowanie"
-      description="Zaloguj się, aby wystawiać faktury i zarządzać klientami."
-    >
-      <LoginForm />
-    </AuthShell>
-  );
+interface LoginPageProps {
+  searchParams?: Record<string, string | string[] | undefined>;
+}
+
+export default function LoginPage({ searchParams }: LoginPageProps) {
+  const errorParam = searchParams?.error;
+  const initialFormError = Array.isArray(errorParam)
+    ? (errorParam[0] ?? null)
+    : (errorParam ?? null);
+
+  return <LoginForm initialFormError={initialFormError} />;
 }

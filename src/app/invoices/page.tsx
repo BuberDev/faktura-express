@@ -22,7 +22,7 @@ export default async function InvoicesPage() {
   const invoices = await repository.listByUser(user.id).catch(() => []);
 
   return (
-    <AppShell title="Faktury" subtitle="Lista dokumentów przypisana do Twojego konta.">
+    <AppShell title="Faktury" subtitle="Lista dokumentów przypisana do Twojego konta." userEmail={user.email}>
       <Card className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-2xl">Twoje faktury</h2>

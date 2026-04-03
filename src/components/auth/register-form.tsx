@@ -116,17 +116,17 @@ export function RegisterForm() {
       {formError ? <p className="text-sm text-[#996515]">{formError}</p> : null}
       {formSuccess ? <p className="text-sm text-gold-dark">{formSuccess}</p> : null}
 
-      <Button className="w-full" type="submit" disabled={isSubmitting}>
+      <Button className="w-full cursor-pointer" type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Tworzenie konta..." : "Załóż konto"}
       </Button>
 
-      <Button className="w-full" type="button" variant="outline" onClick={signInWithGoogle}>
+      <Button className="w-full cursor-pointer" type="button" variant="outline" onClick={signInWithGoogle}>
         Kontynuuj przez Google
       </Button>
 
       <p className="text-xs text-black/65 dark:text-white/65">
         Masz już konto?{" "}
-        <Link href="/auth/login" className="text-gold hover:underline">
+        <Link href="/auth/login" className="text-gold hover:underline cursor-pointer">
           Zaloguj się
         </Link>
       </p>
