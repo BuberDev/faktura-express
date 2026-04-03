@@ -38,7 +38,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
         <section className="mx-auto w-full max-w-7xl px-4 pb-10 pt-16 md:px-8">
           <div className="space-y-3 rounded-md border border-gold-subtle bg-gradient-to-b from-white via-[#FCF6BA]/20 to-[#F9F9F9] p-6 shadow-gold-lg dark:bg-dark-surface">
-            <Badge className="mb-2 uppercase tracking-[0.2em]">Dlaczego Faktura Express</Badge>
+            <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-gold-dark dark:text-gold-light">
+              Dlaczego Faktura Express
+            </h2>
             {[
               "Szybkie wystawianie i gotowy PDF",
               "Automatyczne wyliczenia i podgląd na żywo",

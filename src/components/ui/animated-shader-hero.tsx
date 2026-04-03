@@ -440,14 +440,14 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
         )}
 
         <div className="mx-auto max-w-5xl space-y-6 px-4 text-center">
-          <div className="space-y-2">
-            <h1 className="animate-fade-in-up animation-delay-200 bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
+          <h1 className="mx-auto max-w-5xl space-y-2 text-center">
+            <span className="block animate-fade-in-up animation-delay-200 bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
               {headline.line1}
-            </h1>
-            <h1 className="animate-fade-in-up animation-delay-400 bg-gradient-to-r from-gold-light via-gold to-[#996515] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
+            </span>
+            <span className="block animate-fade-in-up animation-delay-400 bg-gradient-to-r from-gold-light via-gold to-[#996515] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
               {headline.line2}
-            </h1>
-          </div>
+            </span>
+          </h1>
 
           <div className="mx-auto max-w-3xl animate-fade-in-up animation-delay-600">
             <p className="text-lg font-light leading-relaxed text-white/85 md:text-xl lg:text-2xl">{subtitle}</p>

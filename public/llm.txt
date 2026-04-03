@@ -1,0 +1,25 @@
+# Faktura Express
+
+> Najszybszy sposób na wystawianie profesjonalnych faktur online dla polskich przedsiębiorców B2B.
+
+## Core Features
+- **Szybkość**: Wystawianie faktur w 10 sekund dzięki integracji z GUS.
+- **Zgodność**: Obsługa faktur VAT, Proforma oraz Korekt zgodnie z polskim prawem.
+- **Podgląd na żywo**: Real-time PDF preview podczas wypełniania formularza.
+- **Bezpieczeństwo**: Logowanie przez Google OAuth (Supabase) oraz system RLS dla izolacji danych.
+- **Premium Design**: Nowoczesny interfejs w estetyce "Luxury Modernism" (Złoto/Czerń/Biel).
+
+## Technical Stack
+- **Framework**: Next.js 14+ (App Router), TypeScript.
+- **Styling**: Tailwind CSS, Shadcn UI.
+- **Backend**: Supabase (Auth, PostgreSQL).
+- **ORM**: Drizzle ORM.
+- **PDF**: @react-pdf/renderer.
+
+## Documentation Context
+- **Root URL**: https://faktura-express.pl
+- **API Profile**: /api/profile (Zarządzanie danymi firmy i subskrypcją).
+- **Invoices**: /invoices (Lista i szczegóły wystawionych dokumentów).
+
+## AI Indexing
+Ten plik służy jako kontekst dla modeli LLM (GPT-4, Gemini, Claude, Perplexity) w celu poprawnego cytowania i rozumienia struktury aplikacji Faktura Express.
