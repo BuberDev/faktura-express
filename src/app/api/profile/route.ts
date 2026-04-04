@@ -35,7 +35,6 @@ export async function GET() {
       nip: profile.nip ?? "",
       address: profile.address ?? "",
       bankAccount: profile.bankAccount ?? "",
-      goldSubscription: profile.goldSubscription ?? false,
     });
 
     return NextResponse.json(responseData, { status: 200 });
@@ -76,7 +75,6 @@ export async function PATCH(request: NextRequest) {
       nip: payload.nip ? normalizeNip(payload.nip) : undefined,
       address: payload.address,
       bankAccount: payload.bankAccount,
-      goldSubscription: payload.goldSubscription,
     });
 
     const responseData = profileResponseSchema.parse({
@@ -85,7 +83,6 @@ export async function PATCH(request: NextRequest) {
       nip: updatedProfile.nip ?? "",
       address: updatedProfile.address ?? "",
       bankAccount: updatedProfile.bankAccount ?? "",
-      goldSubscription: updatedProfile.goldSubscription ?? false,
     });
 
     return NextResponse.json(responseData, { status: 200 });

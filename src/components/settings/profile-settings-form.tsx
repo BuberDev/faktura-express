@@ -27,7 +27,6 @@ export function ProfileSettingsForm() {
     resolver: zodResolver(profileSettingsSchema),
     defaultValues: {
       email: "",
-      goldSubscription: false,
     },
   });
 
@@ -40,7 +39,6 @@ export function ProfileSettingsForm() {
         const profile = await fetchCurrentProfile();
         reset({
           email: profile.email,
-          goldSubscription: profile.goldSubscription,
         });
       } catch {
         setStatusError("Nie udało się pobrać danych profilu.");
@@ -57,13 +55,10 @@ export function ProfileSettingsForm() {
     setStatusMessage(null);
 
     try {
-      const updatedProfile = await updateCurrentProfile({
-        goldSubscription: values.goldSubscription,
-      });
+      const updatedProfile = await updateCurrentProfile({});
 
       reset({
         email: updatedProfile.email,
-        goldSubscription: updatedProfile.goldSubscription,
       });
 
       setStatusMessage("Ustawienia profilu zostały zapisane.");
@@ -85,20 +80,6 @@ export function ProfileSettingsForm() {
       <FormField label="Adres e-mail konta" htmlFor="email" error={errors.email?.message}>
         <Input id="email" disabled autoComplete="email" {...register("email")} />
       </FormField>
-
-      <label className="flex items-start gap-3 rounded-md border border-gold-subtle bg-gold/5 p-3 text-sm">
-        <input
-          type="checkbox"
-          className="mt-0.5 h-4 w-4 rounded border border-gold-subtle accent-[#D4AF37]"
-          {...register("goldSubscription")}
-        />
-        <span>
-          Aktywuj status Gold
-          <span className="mt-1 block text-xs text-black/65 dark:text-white/65">
-            Aktywuje flagę konta premium w profilu Supabase.
-          </span>
-        </span>
-      </label>
 
       {statusError ? <p className="text-sm text-gold-dark">{statusError}</p> : null}
       {statusMessage ? <p className="text-sm text-gold-dark">{statusMessage}</p> : null}

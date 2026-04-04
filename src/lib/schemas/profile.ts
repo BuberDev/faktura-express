@@ -16,7 +16,6 @@ export const profilePatchSchema = z
     nip: optionalNipField.optional(),
     address: optionalTextField.max(500).optional(),
     bankAccount: optionalTextField.max(64).optional(),
-    goldSubscription: z.boolean().optional(),
   })
   .strict();
 
@@ -26,7 +25,6 @@ export const profileResponseSchema = z.object({
   nip: z.string(),
   address: z.string(),
   bankAccount: z.string(),
-  goldSubscription: z.boolean(),
 });
 
 export const companySettingsSchema = z.object({
@@ -38,7 +36,6 @@ export const companySettingsSchema = z.object({
 
 export const profileSettingsSchema = z.object({
   email: z.string().trim(),
-  goldSubscription: z.boolean(),
 });
 
 export type ProfilePatchPayload = z.infer<typeof profilePatchSchema>;

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { SignOutButton } from "@/components/layout/sign-out-button";
 import { Sidebar } from "@/components/ui/modern-side-bar";
 import { SilkBackground } from "@/components/ui/silk-background-animation";
+import { Search } from "lucide-react";
 
 interface AppShellProps {
   title: string;
@@ -31,7 +32,36 @@ export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, 
               >
                 Faktura In
               </Link>
-              <SignOutButton className="md:hidden" />
+              
+              <div className="hidden md:flex flex-1 mx-8 max-w-md">
+                <div className="relative w-full">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+                  <input 
+                    type="text" 
+                    placeholder="Szukaj faktur, klientów..." 
+                    className="w-full h-10 bg-white/5 border border-gold-subtle rounded-full pl-10 pr-4 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold transition-all"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <SignOutButton className="md:hidden" />
+                <div className="hidden md:block">
+                  <SignOutButton />
+                </div>
+              </div>
+            </div>
+            
+            {/* Mobile search bar */}
+            <div className="md:hidden px-4 pb-4">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50" />
+                <input 
+                  type="text" 
+                  placeholder="Szukaj faktur, klientów..." 
+                  className="w-full h-10 bg-white/5 border border-gold-subtle rounded-full pl-10 pr-4 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-1 focus:ring-gold focus:border-gold transition-all"
+                />
+              </div>
             </div>
           </header>
 

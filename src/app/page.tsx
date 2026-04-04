@@ -5,7 +5,9 @@ import { LandingHeroSection } from "@/components/landing/landing-hero-section";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
 import { InvoiceCompareSection } from "@/components/landing/invoice-compare-section";
 import { SilkBackground } from "@/components/ui/silk-background-animation";
-import { Badge } from "@/components/ui/badge";
+import { FeaturesGridSection } from "@/components/landing/features-grid-section";
+import { TrustedBySection } from "@/components/landing/trusted-by-section";
+import { AnimatedTestimonialsSection } from "@/components/landing/testimonials-columns";
 import Footer4Col from "@/components/ui/footer-column";
 
 interface HomePageProps {
@@ -40,24 +42,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <LandingHeroSection />
         <InvoiceCompareSection />
 
-        <section className="mx-auto w-full max-w-7xl px-4 pb-10 pt-16 md:px-8">
-          <div className="space-y-3 rounded-md border border-gold-subtle bg-white/5 p-6 shadow-gold-lg dark:bg-black/20 backdrop-blur-md">
-            <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-gold-dark dark:text-gold-light">
-              Dlaczego Faktura In
-            </h2>
-            {[
-              "Szybkie wystawianie i gotowy PDF",
-              "Automatyczne wyliczenia i podgląd na żywo",
-              "Spójny, elegancki wygląd dokumentów",
-              "Bezpieczne logowanie Google i e-mail",
-            ].map((item) => (
-              <div key={item} className="flex items-center gap-3 rounded-md border border-white/10 p-3 bg-white/5">
-                <CheckCircle2 className="h-4 w-4 text-gold" />
-                <p className="text-sm text-white/90">{item}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+        <TrustedBySection />
+        <FeaturesGridSection />
+        <AnimatedTestimonialsSection />
       </main>
 
       <Footer4Col />

@@ -17,7 +17,6 @@ export const profiles = pgTable("profiles", {
   address: text("address"),
   bankAccount: text("bank_account"),
   avatarUrl: text("avatar_url"),
-  goldSubscription: boolean("gold_subscription").default(false),
   updatedAt: timestamp("updated_at").defaultNow(),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -45,6 +44,8 @@ export const invoices = pgTable(
     totalNet: numeric("total_net", { precision: 15, scale: 2 }).notNull(),
     totalVat: numeric("total_vat", { precision: 15, scale: 2 }).notNull(),
     totalGross: numeric("total_gross", { precision: 15, scale: 2 }).notNull(),
+    
+    template: text("template").notNull().default("classic"),
 
     createdAt: timestamp("created_at").defaultNow(),
   },

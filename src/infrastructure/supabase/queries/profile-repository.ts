@@ -10,7 +10,6 @@ export interface ProfileEntity {
   address: string | null;
   bankAccount: string | null;
   avatarUrl: string | null;
-  goldSubscription: boolean | null;
 }
 
 export class SupabaseProfileRepository {
@@ -29,7 +28,6 @@ export class SupabaseProfileRepository {
       address: data.address,
       bankAccount: data.bankAccount,
       avatarUrl: data.avatarUrl,
-      goldSubscription: data.goldSubscription,
     };
   }
 
@@ -44,7 +42,6 @@ export class SupabaseProfileRepository {
         address: profile.address,
         bankAccount: profile.bankAccount,
         avatarUrl: profile.avatarUrl,
-        goldSubscription: profile.goldSubscription,
       })
       .onConflictDoUpdate({
         target: profiles.id,
@@ -54,7 +51,6 @@ export class SupabaseProfileRepository {
           address: profile.address,
           bankAccount: profile.bankAccount,
           avatarUrl: profile.avatarUrl,
-          goldSubscription: profile.goldSubscription,
           updatedAt: new Date(),
         },
       })
@@ -72,7 +68,6 @@ export class SupabaseProfileRepository {
       address: result.address,
       bankAccount: result.bankAccount,
       avatarUrl: result.avatarUrl,
-      goldSubscription: result.goldSubscription,
     };
   }
 }
