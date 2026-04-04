@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 import { SignOutButton } from "@/components/layout/sign-out-button";
 import { Sidebar } from "@/components/ui/modern-side-bar";
 import { SilkBackground } from "@/components/ui/silk-background-animation";
-import { Search } from "lucide-react";
+import { Search, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 interface AppShellProps {
   title: string;
@@ -15,23 +19,51 @@ interface AppShellProps {
 }
 
 export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, children }: AppShellProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+
   return (
     <div className="dark min-h-screen bg-transparent text-white">
       <div className="fixed inset-0 z-[-1] pointer-events-none">
         <SilkBackground />
       </div>
+      
+      <button
+        type="button"
+        onClick={() => setIsMobileOpen(!isMobileOpen)}
+        className="fixed left-4 top-4 z-30 rounded-md border border-gold-subtle bg-black/40 p-2.5 text-white shadow-gold-sm backdrop-blur-md transition-all hover:bg-gold/10 md:hidden"
+        aria-label="Otwórz menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
       <div className="flex min-h-screen">
-        <Sidebar userEmail={userEmail} avatarUrl={avatarUrl} />
+        <Sidebar 
+          userEmail={userEmail} 
+          avatarUrl={avatarUrl} 
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+          isMobileOpen={isMobileOpen}
+          setIsMobileOpen={setIsMobileOpen}
+        />
 
         <div className="flex min-h-screen flex-1 flex-col">
           <header className="sticky top-0 z-20 border-b border-gold-subtle bg-black/40 backdrop-blur-md">
             <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8">
-              <Link
-                href="/dashboard"
-                className="pl-12 font-display text-xl tracking-wide text-white md:pl-0"
-              >
-                Faktura In
-              </Link>
+              <div className={cn(
+                "transition-all duration-300 ease-in-out transform",
+                // Show on mobile always, show on desktop only when collapsed
+                "opacity-100 translate-x-0 ml-12 md:ml-0", 
+                "md:opacity-0 md:-translate-x-4 pointer-events-none",
+                isCollapsed && "md:opacity-100 md:translate-x-0 md:pointer-events-auto"
+              )}>
+                <Link
+                  href="/dashboard"
+                  className="font-display text-xl tracking-wide text-white"
+                >
+                  Faktura In
+                </Link>
+              </div>
               
               <div className="hidden md:flex flex-1 mx-8 max-w-md">
                 <div className="relative w-full">

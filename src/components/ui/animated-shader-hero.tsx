@@ -23,6 +23,7 @@ interface HeroProps {
     };
   };
   className?: string;
+  children?: React.ReactNode;
 }
 
 interface HeroProgram extends WebGLProgram {
@@ -360,6 +361,7 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
   subtitle,
   buttons,
   className = "",
+  children,
 }) => {
   const canvasRef = useShaderBackground();
   const badgeIconClasses = ["text-gold-light", "text-gold", "text-[#BF953F]"];
@@ -418,58 +420,74 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
 
       {/* Background canvas removed so SilkBackground shows through */}
 
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white">
-        {trustBadge && (
-          <div className="mb-8 animate-fade-in-down">
-            <div className="flex items-center gap-2 rounded-full border border-gold-subtle bg-gold/10 px-6 py-3 text-sm backdrop-blur-md">
-              {trustBadge.icons && (
-                <div className="flex gap-1">
-                  {trustBadge.icons.map((icon, index) => (
-                    <span key={`${icon}-${index}`} className={badgeIconClasses[index % badgeIconClasses.length]}>
-                      {icon}
-                    </span>
-                  ))}
+      <div className="absolute inset-0 z-10 flex items-start md:items-center justify-center text-white">
+        <div className="mx-auto w-full max-w-7xl px-4 pt-24 md:px-8 md:pt-0">
+          <div className={`grid items-center gap-6 md:gap-12 lg:gap-20 ${children ? 'lg:grid-cols-2' : ''}`}>
+            
+            {/* Left Column: Text & Buttons */}
+            <div className={`space-y-8 ${children ? 'text-left' : 'text-center mx-auto max-w-5xl'}`}>
+              
+              {trustBadge && (
+                <div className="animate-fade-in-down">
+                  <div className={`inline-flex items-center gap-2 rounded-full border border-gold-subtle bg-gold/10 px-6 py-3 text-sm backdrop-blur-md ${!children && 'mx-auto'}`}>
+                    {trustBadge.icons && (
+                      <div className="flex gap-1">
+                        {trustBadge.icons.map((icon, index) => (
+                          <span key={`${icon}-${index}`} className={badgeIconClasses[index % badgeIconClasses.length]}>
+                            {icon}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <span className="text-gold-light">{trustBadge.text}</span>
+                  </div>
                 </div>
               )}
-              <span className="text-gold-light">{trustBadge.text}</span>
-            </div>
-          </div>
-        )}
 
-        <div className="mx-auto max-w-5xl space-y-6 px-4 text-center">
-          <h1 className="mx-auto max-w-5xl space-y-2 text-center">
-            <span className="block animate-fade-in-up animation-delay-200 bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
-              {headline.line1}
-            </span>
-            <span className="block animate-fade-in-up animation-delay-400 bg-gradient-to-r from-gold-light via-gold to-[#996515] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
-              {headline.line2}
-            </span>
-          </h1>
+              <h1 className={`space-y-2 ${children ? 'text-left' : 'text-center mx-auto max-w-5xl'}`}>
+                <span className="block animate-fade-in-up animation-delay-200 bg-gradient-to-r from-[#BF953F] via-[#FCF6BA] to-[#B38728] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
+                  {headline.line1}
+                </span>
+                <span className="block animate-fade-in-up animation-delay-400 bg-gradient-to-r from-gold-light via-gold to-[#996515] bg-clip-text text-5xl font-bold text-transparent md:text-7xl lg:text-8xl">
+                  {headline.line2}
+                </span>
+              </h1>
 
-          <div className="mx-auto max-w-3xl animate-fade-in-up animation-delay-600">
-            <p className="text-lg font-light leading-relaxed text-white/85 md:text-xl lg:text-2xl">{subtitle}</p>
-          </div>
+              <div className={`animate-fade-in-up animation-delay-600 ${children ? 'max-w-2xl' : 'mx-auto max-w-3xl'}`}>
+                <p className="text-lg font-light leading-relaxed text-white/85 md:text-xl lg:text-2xl">{subtitle}</p>
+              </div>
 
-          {buttons && (
-            <div className="mt-10 flex animate-fade-in-up animation-delay-800 flex-col justify-center gap-4 sm:flex-row">
-              {buttons.primary && (
-                <button
-                  onClick={buttons.primary.onClick}
-                  className="rounded-full bg-gold-metallic px-8 py-4 text-lg font-semibold text-black transition-all duration-300 hover:scale-105 hover:shadow-gold-lg"
-                >
-                  {buttons.primary.text}
-                </button>
+              {buttons && (
+                <div className={`mt-10 flex animate-fade-in-up animation-delay-800 flex-col gap-4 sm:flex-row ${children ? 'justify-start' : 'justify-center'}`}>
+                  {buttons.primary && (
+                    <button
+                      onClick={buttons.primary.onClick}
+                      className="rounded-full bg-gold-metallic px-8 py-4 text-lg font-semibold text-black transition-all duration-300 hover:scale-105 hover:shadow-gold-lg"
+                    >
+                      {buttons.primary.text}
+                    </button>
+                  )}
+                  {buttons.secondary && (
+                    <button
+                      onClick={buttons.secondary.onClick}
+                      className="rounded-full border border-gold-subtle bg-gold/10 px-8 py-4 text-lg font-semibold text-gold-light backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-gold/20"
+                    >
+                      {buttons.secondary.text}
+                    </button>
+                  )}
+                </div>
               )}
-              {buttons.secondary && (
-                <button
-                  onClick={buttons.secondary.onClick}
-                  className="rounded-full border border-gold-subtle bg-gold/10 px-8 py-4 text-lg font-semibold text-gold-light backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-gold/20"
-                >
-                  {buttons.secondary.text}
-                </button>
-              )}
+
             </div>
-          )}
+
+            {/* Right Column: Hero Image / Children */}
+            {children && (
+              <div className="relative mt-4 md:mt-8 lg:mt-0 animate-fade-in-up animation-delay-800 w-full animate-in fade-in slide-in-from-right-8">
+                {children}
+              </div>
+            )}
+
+          </div>
         </div>
       </div>
     </div>
