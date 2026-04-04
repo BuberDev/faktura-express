@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 48 48">
@@ -61,46 +62,46 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="flex h-[100dvh] w-full flex-col bg-white font-geist text-black md:flex-row dark:bg-black dark:text-white">
+    <div className="flex min-h-[100dvh] w-full flex-col bg-transparent font-geist text-white md:flex-row">
       <section className="flex flex-1 items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="flex flex-col gap-6">
-            <h1 className="animate-element animate-delay-100 text-4xl font-semibold leading-tight md:text-5xl">{title}</h1>
-            <p className="animate-element animate-delay-200 text-black/65 dark:text-white/65">{description}</p>
+            <h1 className="animate-element animate-delay-100 text-4xl font-semibold leading-tight md:text-5xl text-white">{title}</h1>
+            <p className="animate-element animate-delay-200 text-white/65">{description}</p>
 
             <form className="space-y-5" onSubmit={onSignIn}>
               <div className="animate-element animate-delay-300">
-                <label className="text-sm font-medium text-black/65 dark:text-white/65">Adres e-mail</label>
+                <label className="text-sm font-medium text-white/80">Adres e-mail</label>
                 <GlassInputWrapper>
                   <input
                     name="email"
                     type="email"
                     placeholder="Wpisz adres e-mail"
-                    className="w-full rounded-2xl bg-transparent p-4 text-sm focus:outline-none"
+                    className="w-full rounded-2xl bg-transparent p-4 text-sm text-white placeholder-white/40 focus:outline-none"
                   />
                 </GlassInputWrapper>
               </div>
 
               <div className="animate-element animate-delay-400">
-                <label className="text-sm font-medium text-black/65 dark:text-white/65">Hasło</label>
+                <label className="text-sm font-medium text-white/80">Hasło</label>
                 <GlassInputWrapper>
                   <div className="relative">
                     <input
                       name="password"
                       type={showPassword ? "text" : "password"}
                       placeholder="Wpisz hasło"
-                      className="w-full rounded-2xl bg-transparent p-4 pr-12 text-sm focus:outline-none"
+                      className="w-full rounded-2xl bg-transparent p-4 pr-12 text-sm text-white placeholder-white/40 focus:outline-none"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-3 flex items-center"
+                      className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
                       aria-label={showPassword ? "Ukryj hasło" : "Pokaż hasło"}
                     >
                       {showPassword ? (
-                        <EyeOff className="h-5 w-5 text-black/60 transition-colors hover:text-black dark:text-white/60 dark:hover:text-white" />
+                        <EyeOff className="h-5 w-5 text-white/60 transition-colors hover:text-white" />
                       ) : (
-                        <Eye className="h-5 w-5 text-black/60 transition-colors hover:text-black dark:text-white/60 dark:hover:text-white" />
+                        <Eye className="h-5 w-5 text-white/60 transition-colors hover:text-white" />
                       )}
                     </button>
                   </div>
@@ -110,7 +111,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               <div className="animate-element animate-delay-500 flex items-center justify-between text-sm">
                 <label className="flex cursor-pointer items-center gap-3">
                   <input type="checkbox" name="rememberMe" className="custom-checkbox" />
-                  <span className="text-black/90 dark:text-white/90">Zapamiętaj mnie</span>
+                  <span className="text-white/90">Zapamiętaj mnie</span>
                 </label>
                 <a
                   href="#"
@@ -133,20 +134,20 @@ export const SignInPage: React.FC<SignInPageProps> = ({
             </form>
 
             <div className="animate-element animate-delay-700 relative flex items-center justify-center">
-              <span className="w-full border-t border-gold-subtle" />
-              <span className="absolute bg-white px-4 text-sm text-black/65 dark:bg-black dark:text-white/65">Lub kontynuuj przez</span>
+              <span className="w-full border-t border-gold-subtle/50" />
+              <span className="absolute bg-[#1a1a1a]/80 backdrop-blur-sm rounded-md px-4 py-1 text-sm text-white/65">Lub kontynuuj przez</span>
             </div>
 
             <button
               type="button"
               onClick={onGoogleSignIn}
-              className="animate-element animate-delay-800 flex w-full items-center justify-center gap-3 rounded-2xl border border-gold-subtle py-4 transition-colors hover:bg-gold/10 cursor-pointer"
+              className="animate-element animate-delay-800 flex w-full items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/5 py-4 transition-colors hover:bg-gold/10 hover:border-gold-subtle cursor-pointer text-white"
             >
-              <GoogleIcon />
+              <Image src="/google-icon.svg" alt="Google" width={24} height={24} />
               Kontynuuj przez Google
             </button>
 
-            <p className="animate-element animate-delay-900 text-center text-sm text-black/65 dark:text-white/65">
+            <p className="animate-element animate-delay-900 text-center text-sm text-white/65">
               Nie masz konta?{" "}
               <a
                 href="#"

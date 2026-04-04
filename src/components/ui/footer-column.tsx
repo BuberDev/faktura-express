@@ -83,16 +83,16 @@ const contactInfo = [
 
 export default function Footer4Col() {
   return (
-    <footer className="mt-16 w-full place-self-end rounded-t-xl border-t border-gold-subtle bg-gradient-to-b from-white to-[#F9F9F9] dark:bg-dark-surface">
+    <footer className="mt-16 w-full place-self-end rounded-t-xl border-t border-gold-subtle bg-black/60 backdrop-blur-md text-white">
       <div className="mx-auto max-w-screen-xl px-4 pb-8 pt-16 sm:px-6 lg:px-8 lg:pt-20">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <div>
-            <div className="flex justify-center gap-2 text-foreground sm:justify-start">
+            <div className="flex justify-center gap-2 text-white sm:justify-start">
               <img src={data.company.logo} alt="logo" className="h-8 w-8 rounded-full object-cover" />
               <span className="text-2xl font-semibold">{data.company.name}</span>
             </div>
 
-            <p className="mt-6 max-w-md text-center leading-relaxed text-foreground/70 sm:max-w-xs sm:text-left">
+            <p className="mt-6 max-w-md text-center leading-relaxed text-white/70 sm:max-w-xs sm:text-left">
               {data.company.description}
             </p>
 
@@ -114,7 +114,7 @@ export default function Footer4Col() {
               <ul className="mt-8 space-y-4 text-sm">
                 {aboutLinks.map(({ text, href }) => (
                   <li key={text}>
-                    <Link className="text-foreground/70 transition hover:text-gold-dark" href={href}>
+                    <Link className="text-white/70 transition hover:text-gold-dark" href={href}>
                       {text}
                     </Link>
                   </li>
@@ -127,7 +127,7 @@ export default function Footer4Col() {
               <ul className="mt-8 space-y-4 text-sm">
                 {serviceLinks.map(({ text, href }) => (
                   <li key={text}>
-                    <Link className="text-foreground/70 transition hover:text-gold-dark" href={href}>
+                    <Link className="text-white/70 transition hover:text-gold-dark" href={href}>
                       {text}
                     </Link>
                   </li>
@@ -145,10 +145,10 @@ export default function Footer4Col() {
                       className={
                         hasIndicator
                           ? "group flex justify-center gap-1.5 sm:justify-start"
-                          : "text-foreground/70 transition hover:text-gold-dark"
+                          : "text-white/70 transition hover:text-gold-dark"
                       }
                     >
-                      <span className="text-foreground/70 transition group-hover:text-gold-dark">{text}</span>
+                      <span className="text-white/70 transition group-hover:text-gold-dark">{text}</span>
                       {hasIndicator ? (
                         <span className="relative flex size-2">
                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold opacity-75" />
@@ -169,9 +169,9 @@ export default function Footer4Col() {
                     <div className="flex items-center justify-center gap-1.5 sm:justify-start">
                       <Icon className="size-5 shrink-0 text-gold-dark shadow-sm" />
                       {isAddress ? (
-                        <address className="-mt-0.5 flex-1 not-italic text-foreground/70 transition">{text}</address>
+                        <address className="-mt-0.5 flex-1 not-italic text-white/70 transition">{text}</address>
                       ) : (
-                        <span className="flex-1 text-foreground/70 transition">{text}</span>
+                        <span className="flex-1 text-white/70 transition">{text}</span>
                       )}
                     </div>
                   </li>
@@ -183,11 +183,11 @@ export default function Footer4Col() {
 
         <div className="mt-12 border-t border-gold-subtle pt-6">
           <div className="text-center sm:flex sm:justify-between sm:text-left">
-            <p className="text-sm text-foreground/70">
+            <p className="text-sm text-white/70">
               <span className="block sm:inline">Wszelkie prawa zastrzeżone.</span>
             </p>
 
-            <p className="mt-4 text-sm text-foreground/70 transition sm:order-first sm:mt-0">
+            <p className="mt-4 text-sm text-white/60 transition sm:order-first sm:mt-0">
               &copy; {new Date().getFullYear()} {data.company.name}
             </p>
           </div>

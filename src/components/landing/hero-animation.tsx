@@ -57,9 +57,9 @@ export function HeroAnimation() {
         initial={{ opacity: 0, x: -24 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5 }}
-        className="rounded-md border border-[#E5E5E5] bg-gradient-to-b from-white to-[#F9F9F9] p-6 dark:border-[#262626] dark:bg-dark-surface"
+        className="rounded-md border border-white/10 bg-white/5 p-6 backdrop-blur-md"
       >
-        <p className="mb-2 text-xs uppercase tracking-[0.2em] text-black/50 dark:text-white/45">
+        <p className="mb-2 text-xs uppercase tracking-[0.2em] text-white/50">
           Stan początkowy
         </p>
         <h3 className="mb-5 font-display text-2xl">Pusta faktura</h3>
@@ -77,21 +77,21 @@ export function HeroAnimation() {
         initial={{ opacity: 0, x: 24 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
-        className="rounded-md border border-gold-subtle bg-gradient-to-b from-white via-[#FCF6BA]/25 to-[#F9F9F9] p-6 shadow-gold-lg dark:bg-dark-surface"
+        className="rounded-md border border-gold-subtle bg-white/5 p-6 shadow-gold-lg backdrop-blur-md"
       >
         <p className="mb-2 text-xs uppercase tracking-[0.2em] text-gold-dark dark:text-gold-light">
-          Stan po 10 sekundach
+          Stan po 33 sekundyach
         </p>
         <h3 className="mb-5 font-display text-2xl">Gotowa faktura</h3>
 
         <div className="space-y-3 text-sm">
           <div className="rounded-md border border-gold-subtle bg-gold/10 p-3">
-            <p className="text-xs text-black/50 dark:text-white/50">NIP nabywcy</p>
+            <p className="text-xs text-white/50">NIP nabywcy</p>
             <p className="font-semibold tracking-[0.15em]">{typedNip || "_"}</p>
           </div>
 
-          <div className="rounded-md border border-[#E5E5E5] bg-white p-3 dark:border-[#262626] dark:bg-black/40">
-            <p className="text-xs text-black/50 dark:text-white/50">Kwota brutto</p>
+          <div className="rounded-md border border-white/10 bg-white/5 p-3">
+            <p className="text-xs text-white/50">Kwota brutto</p>
             <motion.p
               key={formattedGross}
               initial={{ y: 6, opacity: 0 }}
@@ -103,7 +103,7 @@ export function HeroAnimation() {
             </motion.p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-md border border-gold-subtle bg-black p-3 text-white dark:bg-white dark:text-black">
+          <div className="flex items-center gap-3 rounded-md border border-gold-subtle bg-black/40 p-3 text-white backdrop-blur-sm">
             <motion.span
               initial={{ scale: 0.7, opacity: 0 }}
               animate={{ scale: isApproved ? 1 : 0.7, opacity: isApproved ? 1 : 0 }}
@@ -112,7 +112,7 @@ export function HeroAnimation() {
             >
               ✓
             </motion.span>
-            <span>Wystawienie faktury zajęło mniej niż 10 sekund.</span>
+            <span>Wystawienie faktury zajęło mniej niż 33 sekundy.</span>
           </div>
         </div>
       </motion.div>

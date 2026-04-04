@@ -124,9 +124,9 @@ export function RegisterForm() {
         Kontynuuj przez Google
       </Button>
 
-      <p className="text-xs text-black/65 dark:text-white/65">
+      <p className="text-xs text-white/65">
         Masz już konto?{" "}
-        <Link href="/auth/login" className="text-gold hover:underline cursor-pointer">
+        <Link href="/auth/login" className="text-gold-light hover:underline cursor-pointer">
           Zaloguj się
         </Link>
       </p>

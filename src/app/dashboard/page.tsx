@@ -47,18 +47,18 @@ export default async function DashboardPage() {
       avatarUrl={profile?.avatarUrl}
     >
       <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <p className="text-xs uppercase tracking-wide text-black/55 dark:text-white/55">Faktury w toku</p>
-          <p className="mt-2 font-display text-3xl">{pendingInvoices}</p>
-        </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-wide text-black/55 dark:text-white/55">Opłacone w tym miesiącu</p>
-          <p className="mt-2 font-display text-3xl">{paidThisMonth}</p>
-        </Card>
-        <Card>
-          <p className="text-xs uppercase tracking-wide text-black/55 dark:text-white/55">Konto</p>
-          <p className="mt-2 text-sm text-black/70 dark:text-white/70">{user.email}</p>
-        </Card>
+        <div className="rounded-xl border border-white/10 bg-black/40 backdrop-blur-md p-6 shadow-gold-md">
+          <p className="text-xs uppercase tracking-wide text-white/55">Faktury w toku</p>
+          <p className="mt-2 font-display text-3xl text-white">{pendingInvoices}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-black/40 backdrop-blur-md p-6 shadow-gold-md">
+          <p className="text-xs uppercase tracking-wide text-white/55">Opłacone w tym miesiącu</p>
+          <p className="mt-2 font-display text-3xl text-white">{paidThisMonth}</p>
+        </div>
+        <div className="rounded-xl border border-white/10 bg-black/40 backdrop-blur-md p-6 shadow-gold-md">
+          <p className="text-xs uppercase tracking-wide text-white/55">Konto</p>
+          <p className="mt-2 text-sm text-white/90">{user.email}</p>
+        </div>
       </div>
     </AppShell>
   );

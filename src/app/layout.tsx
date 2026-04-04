@@ -16,7 +16,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Faktura In | Darmowe Faktury B2B w 10 Sekund",
+    default: "Faktura In | Darmowe Faktury B2B w 33 sekundy",
     template: "%s | Faktura In",
   },
   description: "Najszybszy sposób na wystawianie profesjonalnych faktur online. Darmowe narzędzie B2B z podglądem PDF na żywo, bezpieczne i zgodne z polskim prawem.",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Faktura In",
     title: "Faktura In | Darmowe Faktury B2B",
-    description: "Wystawiaj profesjonalne faktury PDF w 10 sekund. Bez opłat, bez zbędnych formalności.",
+    description: "Wystawiaj profesjonalne faktury PDF w 33 sekundy. Bez opłat, bez zbędnych formalności.",
     images: [
       {
         url: "/logo.png",

@@ -15,7 +15,7 @@ export function LandingHeroSection() {
       }}
       headline={{
         line1: "Faktura w",
-        line2: "10 sekund",
+        line2: "33 sekundy",
       }}
       subtitle="Wystawiaj dokumenty szybciej, zachowaj pełną kontrolę i wysyłaj profesjonalne faktury bez kompromisów bezpieczeństwa."
       buttons={{

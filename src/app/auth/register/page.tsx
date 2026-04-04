@@ -5,7 +5,7 @@ export default function RegisterPage() {
   return (
     <AuthShell
       title="Rejestracja"
-      description="Utwórz darmowe konto i zacznij fakturować w 10 sekund."
+      description="Utwórz darmowe konto i zacznij fakturować w 33 sekundy."
     >
       <RegisterForm />
     </AuthShell>

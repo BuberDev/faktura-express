@@ -3,7 +3,7 @@
 > Najszybszy sposób na wystawianie profesjonalnych faktur online dla polskich przedsiębiorców B2B.
 
 ## Core Features
-- **Szybkość**: Wystawianie faktur w 10 sekund dzięki integracji z GUS.
+- **Szybkość**: Wystawianie faktur w 33 sekundy dzięki integracji z GUS.
 - **Zgodność**: Obsługa faktur VAT, Proforma oraz Korekt zgodnie z polskim prawem.
 - **Podgląd na żywo**: Real-time PDF preview podczas wypełniania formularza.
 - **Bezpieczeństwo**: Logowanie przez Google OAuth (Supabase) oraz system RLS dla izolacji danych.

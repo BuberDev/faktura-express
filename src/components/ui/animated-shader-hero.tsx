@@ -365,7 +365,7 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
   const badgeIconClasses = ["text-gold-light", "text-gold", "text-[#BF953F]"];
 
   return (
-    <div className={`relative h-screen w-full overflow-hidden bg-black ${className}`}>
+    <div className={`relative w-full overflow-hidden bg-transparent ${className}`}>
       <style jsx>{`
         @keyframes fade-in-down {
           from {
@@ -413,13 +413,10 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
         .animation-delay-800 {
           animation-delay: 0.8s;
         }
-      `}</style>
+      `}
+      </style>
 
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 h-full w-full touch-none object-contain"
-        style={{ background: "black" }}
-      />
+      {/* Background canvas removed so SilkBackground shows through */}
 
       <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white">
         {trustBadge && (

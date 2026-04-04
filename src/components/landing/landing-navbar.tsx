@@ -61,7 +61,7 @@ export function LandingNavbar() {
             <Link
               key={link.label}
               href={link.href}
-              className="text-sm text-black/78 transition hover:text-gold-dark dark:text-white/78 dark:hover:text-gold-light"
+              className="text-sm text-white/80 transition hover:text-gold-light"
             >
               {link.label}
             </Link>

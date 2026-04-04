@@ -4,6 +4,7 @@ import { CheckCircle2 } from "lucide-react";
 import { LandingHeroSection } from "@/components/landing/landing-hero-section";
 import { LandingNavbar } from "@/components/landing/landing-navbar";
 import { InvoiceCompareSection } from "@/components/landing/invoice-compare-section";
+import { SilkBackground } from "@/components/ui/silk-background-animation";
 import { Badge } from "@/components/ui/badge";
 import Footer4Col from "@/components/ui/footer-column";
 
@@ -29,7 +30,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   }
 
   return (
-    <div className="relative min-h-screen bg-white text-black dark:bg-black dark:text-white">
+    <div className="dark relative min-h-screen bg-transparent text-white">
+      <div className="fixed inset-0 z-[-1] pointer-events-none">
+        <SilkBackground />
+      </div>
       <LandingNavbar />
 
       <main>
@@ -37,7 +41,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <InvoiceCompareSection />
 
         <section className="mx-auto w-full max-w-7xl px-4 pb-10 pt-16 md:px-8">
-          <div className="space-y-3 rounded-md border border-gold-subtle bg-gradient-to-b from-white via-[#FCF6BA]/20 to-[#F9F9F9] p-6 shadow-gold-lg dark:bg-dark-surface">
+          <div className="space-y-3 rounded-md border border-gold-subtle bg-white/5 p-6 shadow-gold-lg dark:bg-black/20 backdrop-blur-md">
             <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-gold-dark dark:text-gold-light">
               Dlaczego Faktura In
             </h2>
@@ -47,9 +51,9 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               "Spójny, elegancki wygląd dokumentów",
               "Bezpieczne logowanie Google i e-mail",
             ].map((item) => (
-              <div key={item} className="flex items-center gap-3 rounded-md border border-[#E5E5E5] p-3 dark:border-[#262626]">
+              <div key={item} className="flex items-center gap-3 rounded-md border border-white/10 p-3 bg-white/5">
                 <CheckCircle2 className="h-4 w-4 text-gold" />
-                <p className="text-sm text-black/80 dark:text-white/80">{item}</p>
+                <p className="text-sm text-white/90">{item}</p>
               </div>
             ))}
           </div>
