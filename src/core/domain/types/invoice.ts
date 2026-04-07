@@ -1,4 +1,4 @@
-export type InvoiceType = "VAT" | "Proforma" | "Correction";
+export type InvoiceType = "VAT" | "Proforma" | "Correction" | "Bill" | "Receipt" | "Offer";
 
 export type InvoiceStatus = "unpaid" | "paid";
 

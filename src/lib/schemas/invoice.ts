@@ -4,7 +4,7 @@ import { isValidNip } from "@/core/use-cases/validate-nip";
 
 export const invoiceFormSchema = z.object({
   number: z.string().min(1, "Numer faktury jest wymagany."),
-  type: z.enum(["VAT", "Proforma", "Correction"]),
+  type: z.enum(["VAT", "Proforma", "Correction", "Bill", "Receipt", "Offer"]),
   issueDate: z.string().min(1, "Data wystawienia jest wymagana."),
   saleDate: z.string().min(1, "Data sprzedaży jest wymagana."),
   dueDate: z.string().min(1, "Termin płatności jest wymagany."),

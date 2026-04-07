@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 import {
   Area,
@@ -21,9 +22,9 @@ import {
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 export interface MonthlyRevenue {
-  month: string; // e.g. "Sty", "Lut"...
-  brutto: number;
-  netto: number;
+  month: string;
+  brutto: number; // Revenue
+  netto: number;  // Costs
 }
 
 export interface InvoiceStatusData {
@@ -76,7 +77,7 @@ function useIsMounted() {
 
 // ─── 1. Revenue Area Chart ────────────────────────────────────────────────────
 
-export function RevenueAreaChart({ data }: { data: MonthlyRevenue[] }) {
+export function RevenueAreaChart({ data, title = "Przychód miesięczny" }: { data: MonthlyRevenue[]; title?: string }) {
   const isMounted = useIsMounted();
   
   return (
@@ -84,9 +85,9 @@ export function RevenueAreaChart({ data }: { data: MonthlyRevenue[] }) {
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
-            Przychód miesięczny
+            {title}
           </h3>
-          <p className="mt-0.5 text-xs text-white/35">brutto vs. netto (PLN)</p>
+          <p className="mt-0.5 text-xs text-white/35">przychody vs. koszty (PLN)</p>
         </div>
         <span className="rounded-full border border-gold/20 bg-gold/10 px-3 py-1 text-xs text-gold-light">
           Ostatnie 12 mies.
@@ -157,7 +158,7 @@ export function RevenueAreaChart({ data }: { data: MonthlyRevenue[] }) {
 
 const STATUS_COLORS = [GOLD, "rgba(255,255,255,0.2)"];
 
-export function InvoiceStatusDonut({ data }: { data: InvoiceStatusData[] }) {
+export function InvoiceStatusDonut({ data, title = "Status faktur" }: { data: InvoiceStatusData[]; title?: string }) {
   const isMounted = useIsMounted();
   const total = data.reduce((s, d) => s + d.value, 0);
 
@@ -165,9 +166,9 @@ export function InvoiceStatusDonut({ data }: { data: InvoiceStatusData[] }) {
     <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
       <div className="mb-4">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
-          Status faktur
+          {title}
         </h3>
-        <p className="mt-0.5 text-xs text-white/35">opłacone vs. oczekujące</p>
+        <p className="mt-0.5 text-xs text-white/35">przychody vs. koszty (opłacone)</p>
       </div>
 
       <div className="flex flex-col items-center">
@@ -342,9 +343,10 @@ export interface RecentInvoiceRow {
   date: string;
   gross: number;
   status: "paid" | "unpaid";
+  type: string;
 }
 
-export function RecentInvoicesTable({ rows }: { rows: RecentInvoiceRow[] }) {
+export function RecentInvoicesTable({ rows, title = "Ostatnie dokumenty" }: { rows: RecentInvoiceRow[]; title?: string }) {
   if (rows.length === 0) {
     return (
       <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
@@ -360,7 +362,7 @@ export function RecentInvoicesTable({ rows }: { rows: RecentInvoiceRow[] }) {
     <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
-          Ostatnie faktury
+          {title}
         </h3>
         <Link href="/invoices" className="text-xs text-gold hover:text-gold-light transition-colors">
           Zobacz wszystkie →
@@ -371,7 +373,7 @@ export function RecentInvoicesTable({ rows }: { rows: RecentInvoiceRow[] }) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-[#262626]">
-              {["Numer", "Klient", "Data", "Brutto", "Status"].map((h) => (
+              {["Numer", "Kontrahent", "Rodzaj", "Data", "Brutto", "Status"].map((h) => (
                 <th
                   key={h}
                   className="pb-3 text-left text-xs font-medium uppercase tracking-wider text-white/35"
@@ -386,6 +388,14 @@ export function RecentInvoicesTable({ rows }: { rows: RecentInvoiceRow[] }) {
               <tr key={row.number} className="group hover:bg-gold/5 transition-colors">
                 <td className="py-3 font-mono text-xs text-gold-light">{row.number}</td>
                 <td className="py-3 max-w-[160px] truncate text-white/80">{row.client}</td>
+                <td className="py-3">
+                  <span className={cn(
+                    "px-2 py-0.5 rounded text-[10px] uppercase font-bold",
+                    row.type === "Przychód" ? "bg-gold/10 text-gold" : "bg-red-500/10 text-red-400"
+                  )}>
+                    {row.type}
+                  </span>
+                </td>
                 <td className="py-3 text-white/40 text-xs">{row.date}</td>
                 <td className="py-3 font-semibold text-white">{formatPln(row.gross)}</td>
                 <td className="py-3">
