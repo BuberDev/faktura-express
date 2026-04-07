@@ -12,6 +12,7 @@ import type { InvoiceEntity } from "@/core/domain/entities/invoice-entity";
 import { calculateInvoiceTotals } from "@/core/use-cases/calculate-vat";
 import { isValidNip, normalizeNip } from "@/core/use-cases/validate-nip";
 import { invoiceFormSchema, type InvoiceFormValues } from "@/lib/schemas/invoice";
+import { createInvoiceAction, updateInvoiceAction } from "@/app/actions/invoice";
 import { cn } from "@/lib/utils";
 
 import { InvoiceFormItems } from "./invoice-form-items";
@@ -19,6 +20,10 @@ import { InvoiceFormMetadata } from "./invoice-form-metadata";
 import { InvoiceFormParty } from "./invoice-form-party";
 import { InvoiceLivePreview } from "./invoice-live-preview";
 import { InvoicePdfDownloadButton } from "./invoice-pdf-download-button";
+
+interface InvoiceWorkspaceProps {
+  initialData?: InvoiceEntity;
+}
 
 const todaysDate = new Date().toISOString().slice(0, 10);
 
@@ -46,11 +51,13 @@ const defaultInvoiceValues: InvoiceFormValues = {
   ],
 };
 
-export function InvoiceWorkspace() {
+export function InvoiceWorkspace({ initialData }: InvoiceWorkspaceProps) {
   const router = useRouter();
   const [activeMobilePanel, setActiveMobilePanel] = useState<"form" | "preview">("form");
   const [gusStatus, setGusStatus] = useState<string | null>(null);
   const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+
+  const isEditing = !!initialData && initialData.id !== "preview";
 
   const {
     control,
@@ -61,13 +68,34 @@ export function InvoiceWorkspace() {
     formState: { errors, isSubmitting },
   } = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceFormSchema),
-    defaultValues: defaultInvoiceValues,
+    defaultValues: initialData
+      ? {
+          number: initialData.number,
+          type: initialData.type,
+          issueDate: initialData.issueDate,
+          saleDate: initialData.saleDate,
+          dueDate: initialData.dueDate,
+          issuerName: initialData.issuer.name,
+          issuerNip: initialData.issuer.nip,
+          issuerAddress: initialData.issuer.address,
+          clientName: initialData.client.name,
+          clientNip: initialData.client.nip,
+          clientAddress: initialData.client.address,
+          status: initialData.status,
+          items: initialData.items.map((item) => ({
+            ...item,
+            netPrice: item.netPrice,
+          })),
+        }
+      : defaultInvoiceValues,
     mode: "onBlur",
   });
 
   const watchedValues = useWatch({ control }) as InvoiceFormValues;
 
   useEffect(() => {
+    if (isEditing) return; // Don't pre-fill if editing existing invoice
+
     async function loadProfile() {
       try {
         const response = await fetch("/api/profile");
@@ -88,7 +116,7 @@ export function InvoiceWorkspace() {
     }
 
     loadProfile();
-  }, [setValue]);
+  }, [setValue, isEditing]);
 
   async function fetchCompanyFromGus(): Promise<void> {
     const rawNip = getValues("clientNip");
@@ -127,14 +155,14 @@ export function InvoiceWorkspace() {
     const values = watchedValues ?? defaultInvoiceValues;
     const totals = calculateInvoiceTotals(values.items);
     return {
-      id: "preview",
-      userId: "preview",
+      id: initialData?.id || "preview",
+      userId: initialData?.userId || "preview",
       number: values.number,
-      type: values.type,
+      type: values.type as any,
       issueDate: values.issueDate,
       saleDate: values.saleDate,
       dueDate: values.dueDate,
-      status: values.status,
+      status: values.status as any,
       issuer: {
         name: values.issuerName,
         nip: values.issuerNip,
@@ -148,37 +176,41 @@ export function InvoiceWorkspace() {
       items: values.items.map((item) => ({
         ...item,
         netPrice: item.netPrice,
+        vatRate: item.vatRate as any,
+        unit: item.unit as any,
       })),
       totalNet: totals.net,
       totalVat: totals.vat,
       totalGross: totals.gross,
+      isDraft: initialData?.isDraft || false,
+      ksefStatus: initialData?.ksefStatus,
+      ksefId: initialData?.ksefId,
+      upoUrl: initialData?.upoUrl,
     };
   }
 
   async function onSubmit(values: InvoiceFormValues): Promise<void> {
-    setSubmitStatus("Zapisywanie faktury...");
+    setSubmitStatus(isEditing ? "Aktualizowanie faktury..." : "Zapisywanie faktury...");
 
     try {
-      const response = await fetch("/api/invoices", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
+      let result;
+      if (isEditing && initialData?.id) {
+        result = await updateInvoiceAction(initialData.id, values);
+      } else {
+        result = await createInvoiceAction(values);
+      }
 
-      const payload = (await response.json()) as { id?: string; error?: string };
-
-      if (!response.ok || !payload.id) {
-        setSubmitStatus(payload.error || "Nie udało się zapisać faktury.");
+      if ("error" in result && result.error) {
+        setSubmitStatus(result.error);
         return;
       }
 
-      setSubmitStatus("Faktura została zapisana. Przekierowanie do szczegółów...");
-      router.push(`/invoices/${payload.id}`);
+      const id = isEditing ? initialData?.id : ("id" in result ? result.id : undefined);
+      setSubmitStatus("Sukces! Przekierowanie...");
+      router.push(`/invoices/${id}`);
       router.refresh();
     } catch {
-      setSubmitStatus("Wystąpił błąd podczas zapisu faktury.");
+      setSubmitStatus("Wystąpił błąd krytyczny.");
     }
   }
 
@@ -226,7 +258,7 @@ export function InvoiceWorkspace() {
           {submitStatus ? <p className="text-sm text-gold-dark">{submitStatus}</p> : null}
 
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Zapisywanie..." : "Wystaw fakturę"}
+            {isSubmitting ? "Zapisywanie..." : isEditing ? "Zapisz zmiany" : "Wystaw fakturę"}
           </Button>
         </form>
 

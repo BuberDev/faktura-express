@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   boolean,
   date,
@@ -46,6 +47,13 @@ export const invoices = pgTable(
     totalGross: numeric("total_gross", { precision: 15, scale: 2 }).notNull(),
     
     template: text("template").notNull().default("classic"),
+    
+    // KSeF related fields
+    ksefStatus: text("ksef_status").notNull().default("none"), // none, pending, accepted, rejected
+    ksefId: text("ksef_id"),
+    upoUrl: text("upo_url"),
+    
+    isDraft: boolean("is_draft").notNull().default(false),
 
     createdAt: timestamp("created_at").defaultNow(),
   },
@@ -69,3 +77,14 @@ export const invoiceItems = pgTable("invoice_items", {
   vatRate: text("vat_rate").notNull(), // 23, 8, 5, 0, zw, np
   createdAt: timestamp("created_at").defaultNow(),
 });
+
+export const invoicesRelations = relations(invoices, ({ many }) => ({
+  invoiceItems: many(invoiceItems),
+}));
+
+export const invoiceItemsRelations = relations(invoiceItems, ({ one }) => ({
+  invoice: one(invoices, {
+    fields: [invoiceItems.invoiceId],
+    references: [invoices.id],
+  }),
+}));

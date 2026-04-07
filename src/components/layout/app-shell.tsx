@@ -15,10 +15,11 @@ interface AppShellProps {
   subtitle?: string;
   userEmail?: string | null;
   avatarUrl?: string | null;
+  maxWidth?: string;
   children: ReactNode;
 }
 
-export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, children }: AppShellProps) {
+export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, maxWidth = "max-w-7xl", children }: AppShellProps) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -49,7 +50,7 @@ export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, 
 
         <div className="flex min-h-screen flex-1 flex-col">
           <header className="sticky top-0 z-20 border-b border-gold-subtle bg-black/40 backdrop-blur-md">
-            <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 md:px-8">
+            <div className={cn("mx-auto flex w-full items-center justify-between px-4 py-4 md:px-8", maxWidth)}>
               <div className={cn(
                 "transition-all duration-300 ease-in-out transform",
                 // Show on mobile always, show on desktop only when collapsed
@@ -97,7 +98,7 @@ export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, 
             </div>
           </header>
 
-          <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-8 md:px-8">
+          <main className={cn("mx-auto w-full flex-1 px-4 py-8 md:px-8", maxWidth)}>
             <section className="mb-6 space-y-1">
               <h1 className="font-display text-3xl tracking-tight text-white">{title}</h1>
               {subtitle ? <p className="text-sm text-white/65">{subtitle}</p> : null}

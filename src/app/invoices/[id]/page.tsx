@@ -3,6 +3,8 @@ import { notFound, redirect } from "next/navigation";
 
 import { AppShell } from "@/components/layout/app-shell";
 import { InvoicePdfDownloadButton } from "@/components/invoice/invoice-pdf-download-button";
+import { KSeFSendButton } from "@/components/invoice/ksef-send-button";
+import { DeleteInvoiceButton } from "@/components/invoice/delete-invoice-button";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { formatPlnCurrency } from "@/core/use-cases/format-currency";
@@ -47,6 +49,7 @@ export default async function InvoiceDetailPage({
       subtitle="Szczegóły dokumentu i pozycje sprzedaży."
       userEmail={user.email}
       avatarUrl={profile?.avatarUrl}
+      maxWidth="max-w-[1600px]"
     >
       <Card className="space-y-4">
         <div className="grid gap-3 md:grid-cols-2">
@@ -95,12 +98,26 @@ export default async function InvoiceDetailPage({
         </div>
 
         <div className="flex flex-col gap-4 border-t border-[#E5E5E5] pt-6 dark:border-[#262626] md:flex-row md:items-end md:justify-between">
-          <Link href="/invoices">
-            <Button variant="outline" size="sm">
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Wróć do listy
-            </Button>
-          </Link>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/invoices">
+              <Button variant="outline" size="sm">
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Wróć do listy
+              </Button>
+            </Link>
+
+            {/* Editing allowed only if not accepted by KSeF */}
+            {(invoice.ksefStatus === "none" || invoice.ksefStatus === "rejected") && (
+              <>
+                <Link href={`/invoices/${invoice.id}/edit`}>
+                  <Button variant="outline" size="sm">
+                    Edytuj fakturę
+                  </Button>
+                </Link>
+                <DeleteInvoiceButton invoiceId={invoice.id} />
+              </>
+            )}
+          </div>
 
           <div className="flex flex-col gap-4 md:flex-row md:items-end">
             <div className="flex w-full flex-col gap-2 rounded-md border border-gold-subtle bg-gold/5 p-4 md:min-w-[300px]">
@@ -116,9 +133,27 @@ export default async function InvoiceDetailPage({
                 <span>Brutto</span>
                 <span>{formatPlnCurrency(invoice.totalGross)}</span>
               </div>
+
+              {invoice.ksefStatus && invoice.ksefStatus !== "none" && (
+                <div className="mt-2 flex items-center justify-between border-t border-gold-subtle pt-2 text-xs">
+                  <span className="text-black/60 dark:text-white/60">KSeF Status</span>
+                  <span className="font-medium uppercase">
+                    {invoice.ksefStatus === "pending" ? "Przetwarzanie..." : 
+                     invoice.ksefStatus === "accepted" ? "Zaakceptowana" : 
+                     invoice.ksefStatus === "rejected" ? "Odrzucona" : invoice.ksefStatus}
+                  </span>
+                </div>
+              )}
             </div>
 
-            <InvoicePdfDownloadButton invoice={invoice} variant="gold" className="md:w-auto" />
+            <div className="flex flex-col gap-2 md:flex-row">
+              <InvoicePdfDownloadButton invoice={invoice} variant="gold" className="md:w-auto" />
+              
+              {/* KSeF submission button */}
+              {(invoice.ksefStatus === "none" || invoice.ksefStatus === "rejected") && (
+                <KSeFSendButton invoiceId={invoice.id} />
+              )}
+            </div>
           </div>
         </div>
       </Card>

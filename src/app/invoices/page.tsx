@@ -35,6 +35,7 @@ export default async function InvoicesPage() {
       subtitle="Lista dokumentów przypisana do Twojego konta." 
       userEmail={user.email}
       avatarUrl={profile?.avatarUrl}
+      maxWidth="max-w-[1600px]"
     >
       <Card className="space-y-4">
         <div className="flex items-center justify-between">

@@ -1,8 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Geist } from "next/font/google";
 import Script from "next/script";
 
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({ subsets: ["latin"] });
 const siteUrl = "https://fakturain.pl";
@@ -89,7 +92,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="pl" className="h-full antialiased">
+    <html lang="pl" className={cn("h-full antialiased", "font-sans", geist.variable)}>
       <head>
         <script
           type="application/ld+json"

@@ -48,6 +48,10 @@ export class SupabaseInvoiceRepository {
         totalNet: invoice.totalNet,
         totalVat: invoice.totalVat,
         totalGross: invoice.totalGross,
+        isDraft: invoice.isDraft,
+        ksefStatus: invoice.ksefStatus || "none",
+        ksefId: invoice.ksefId,
+        upoUrl: invoice.upoUrl,
       }).returning({ id: invoices.id });
 
       if (!insertedInvoice) {
@@ -70,6 +74,60 @@ export class SupabaseInvoiceRepository {
       }
 
       return invoiceId;
+    });
+  }
+
+  async update(id: string, invoice: InvoiceEntity): Promise<void> {
+    await db.transaction(async (tx) => {
+      // Update the invoice header
+      await tx.update(invoices)
+        .set({
+          number: invoice.number,
+          type: invoice.type,
+          issueDate: invoice.issueDate,
+          saleDate: invoice.saleDate,
+          dueDate: invoice.dueDate,
+          status: invoice.status,
+          issuerName: invoice.issuer.name,
+          issuerNip: invoice.issuer.nip,
+          issuerAddress: invoice.issuer.address,
+          clientName: invoice.client.name,
+          clientNip: invoice.client.nip,
+          clientAddress: invoice.client.address,
+          totalNet: invoice.totalNet,
+          totalVat: invoice.totalVat,
+          totalGross: invoice.totalGross,
+          isDraft: invoice.isDraft,
+          ksefStatus: invoice.ksefStatus,
+          ksefId: invoice.ksefId,
+          upoUrl: invoice.upoUrl,
+        })
+        .where(eq(invoices.id, id));
+
+      // Remove existing items and re-insert (simpler than syncing)
+      await tx.delete(invoiceItems).where(eq(invoiceItems.invoiceId, id));
+
+      if (invoice.items.length > 0) {
+        await tx.insert(invoiceItems).values(
+          invoice.items.map((item) => ({
+            invoiceId: id,
+            description: item.description,
+            quantity: item.quantity.toString(),
+            unit: item.unit,
+            netPrice: item.netPrice,
+            vatRate: item.vatRate,
+          }))
+        );
+      }
+    });
+  }
+
+  async delete(id: string): Promise<void> {
+    await db.transaction(async (tx) => {
+      // First delete items to satisfy foreign key constraints (or cascade will handle it, but explicit is safer)
+      await tx.delete(invoiceItems).where(eq(invoiceItems.invoiceId, id));
+      // Delete the invoice itself
+      await tx.delete(invoices).where(eq(invoices.id, id));
     });
   }
 
@@ -103,6 +161,10 @@ export class SupabaseInvoiceRepository {
       totalNet: row.totalNet,
       totalVat: row.totalVat,
       totalGross: row.totalGross,
+      isDraft: row.isDraft,
+      ksefStatus: row.ksefStatus,
+      ksefId: row.ksefId,
+      upoUrl: row.upoUrl,
     };
   }
 }

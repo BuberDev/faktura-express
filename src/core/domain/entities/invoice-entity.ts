@@ -20,4 +20,10 @@ export interface InvoiceEntity {
   totalNet: string;
   totalVat: string;
   totalGross: string;
+
+  // KSeF & Draft Support
+  isDraft: boolean;
+  ksefStatus?: string;
+  ksefId?: string;
+  upoUrl?: string;
 }

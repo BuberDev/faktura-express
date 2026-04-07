@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
       totalNet: totals.net,
       totalVat: totals.vat,
       totalGross: totals.gross,
+      isDraft: false,
     };
 
     const repository = new SupabaseInvoiceRepository();
