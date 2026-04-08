@@ -81,7 +81,7 @@ export function RevenueAreaChart({ data, title = "Przychód miesięczny" }: { da
   const isMounted = useIsMounted();
   
   return (
-    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
+    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6 overflow-hidden">
       <div className="mb-4 flex items-center justify-between">
         <div>
           <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
@@ -163,7 +163,7 @@ export function InvoiceStatusDonut({ data, title = "Status faktur" }: { data: In
   const total = data.reduce((s, d) => s + d.value, 0);
 
   return (
-    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
+    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6 overflow-hidden">
       <div className="mb-4">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
           {title}
@@ -230,7 +230,7 @@ export function InvoiceStatusDonut({ data, title = "Status faktur" }: { data: In
 export function TopClientsBar({ data }: { data: TopClientData[] }) {
   const isMounted = useIsMounted();
   return (
-    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
+    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6 overflow-hidden">
       <div className="mb-4">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
           Top klienci
@@ -288,7 +288,7 @@ export function TopClientsBar({ data }: { data: TopClientData[] }) {
 export function InvoiceTypeBar({ data }: { data: InvoiceTypeData[] }) {
   const isMounted = useIsMounted();
   return (
-    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
+    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6 overflow-hidden">
       <div className="mb-4">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
           Typy dokumentów
@@ -349,7 +349,7 @@ export interface RecentInvoiceRow {
 export function RecentInvoicesTable({ rows, title = "Ostatnie dokumenty" }: { rows: RecentInvoiceRow[]; title?: string }) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
+      <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6 overflow-hidden">
         <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/60">
           Ostatnie faktury
         </h3>
@@ -359,7 +359,7 @@ export function RecentInvoicesTable({ rows, title = "Ostatnie dokumenty" }: { ro
   }
 
   return (
-    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6">
+    <div className="rounded-xl border border-[#262626] bg-black/40 backdrop-blur-md p-6 overflow-hidden">
       <div className="mb-5 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-white/60">
           {title}

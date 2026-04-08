@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Faktura In Team" }],
   creator: "Faktura In",
   publisher: "Faktura In",
+  alternates: {
+    canonical: siteUrl,
+  },
+  manifest: "/manifest.webmanifest",
   formatDetection: {
     email: false,
     address: false,

@@ -367,7 +367,7 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
   const badgeIconClasses = ["text-gold-light", "text-gold", "text-[#BF953F]"];
 
   return (
-    <div className={`relative w-full overflow-hidden bg-transparent ${className}`}>
+    <div className={`relative w-full overflow-hidden bg-transparent flex flex-col ${className}`}>
       <style jsx>{`
         @keyframes fade-in-down {
           from {
@@ -420,8 +420,8 @@ const AnimatedShaderHero: React.FC<HeroProps> = ({
 
       {/* Background canvas removed so SilkBackground shows through */}
 
-      <div className="absolute inset-0 z-10 flex items-start md:items-center justify-center text-white">
-        <div className="mx-auto w-full max-w-7xl px-4 pt-24 md:px-8 md:pt-0">
+      <div className="relative z-10 flex flex-1 w-full items-start md:items-center justify-center text-white">
+        <div className="mx-auto w-full max-w-7xl px-4 pt-28 pb-16 md:px-8 md:pt-0 md:pb-0">
           <div className={`grid items-center gap-6 md:gap-12 lg:gap-20 ${children ? 'lg:grid-cols-2' : ''}`}>
             
             {/* Left Column: Text & Buttons */}

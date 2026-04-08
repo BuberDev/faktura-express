@@ -41,11 +41,19 @@ export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, 
         />
 
         <div className="flex flex-1 flex-col overflow-hidden">
-          <header className="z-20 border-b border-gold-subtle/20 bg-[#111111]">
+          <header className="relative z-20 border-b border-gold-subtle/20 bg-[#111111]">
             <div className={cn("mx-auto flex w-full items-center justify-between px-4 py-4 md:px-8", maxWidth)}>
+              <button
+                onClick={() => setIsMobileOpen(true)}
+                className="absolute left-4 top-5 md:hidden z-50 rounded-md text-white/70 hover:bg-white/5 hover:text-white"
+                aria-label="Toggle Sidebar"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+
               <div className={cn(
                 "transition-all duration-300 ease-in-out transform",
-                "opacity-100 translate-x-0 ml-12 md:ml-0", 
+                "opacity-100 translate-x-0 ml-10 md:ml-0", 
                 "md:opacity-0 md:-translate-x-4 pointer-events-none",
                 isCollapsed && "md:opacity-100 md:translate-x-0 md:pointer-events-auto"
               )}>
@@ -53,7 +61,7 @@ export function AppShell({ title, subtitle, userEmail = null, avatarUrl = null, 
                   href="/dashboard"
                   className="flex items-center gap-3 font-display text-xl tracking-wide text-gold-metallic bg-clip-text"
                 >
-                  <div className="relative h-8 w-8 shrink-0">
+                  <div className="md:hidden relative h-8 w-8 shrink-0">
                     <Image 
                       src="/logo.svg" 
                       alt="Logo" 

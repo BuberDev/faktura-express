@@ -164,14 +164,16 @@ export default async function DashboardPage() {
           </Card>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+        <div className="grid gap-4 lg:grid-cols-3 min-w-0">
+          <div className="lg:col-span-2 min-w-0 overflow-hidden">
             <RevenueAreaChart data={monthlyRevenue} />
           </div>
-          <InvoiceStatusDonut data={statusData} />
+          <div className="min-w-0 overflow-hidden">
+            <InvoiceStatusDonut data={statusData} />
+          </div>
         </div>
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2 min-w-0">
           {topClients.length > 0 && <TopClientsBar data={topClients} />}
           <RecentInvoicesTable rows={recentRows} />
         </div>
